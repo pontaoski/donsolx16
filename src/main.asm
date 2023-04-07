@@ -7,57 +7,46 @@ handleTimer:                   ; when auto_room is 1, do post flip actions
 	BNE @skip
 	DEC auto_room
 	JSR flipPost_room
-@skip:                         ;
+@skip:
 
-;; skip if no input
+handleJoy:
+	LDA #0
+	JSR joystick_get
 
-handleJoy:                     ;
-	LDA next_input
-	CMP #$00
-	BNE releaseJoy
-	INC seed1_deck               ; increment seed1
-	JMP __MAIN
+	; INC seed1_deck               ; increment seed1
+	; INC seed2_deck               ; increment seed2 on input
 
-;; release input, store in regA
-
-releaseJoy:                    ;
-	LDA next_input
-	LDX #$00                     ; release
-	STX next_input
-	INC seed2_deck               ; increment seed2 on input
-
-checkJoy:                      ;
 	LDX view_game
 	CPX #$00
 	BNE @game
-@splash:                       ;
-	CMP BUTTON_RIGHT
+@splash:
+	CMP ButtonsA::Right
 	BEQ onRight_splash
-	CMP BUTTON_LEFT
+	CMP ButtonsA::Left
 	BEQ onLeft_splash
-	CMP BUTTON_START
+	CMP ButtonsA::Start
 	BEQ onStart_splash
-	CMP BUTTON_B
+	CMP ButtonsA::ButB
 	BEQ onB_splash
-	CMP BUTTON_A
+	CMP ButtonsA::ButY
 	BEQ onA_splash
 	JMP __MAIN
-@game:                         ;
-	CMP BUTTON_RIGHT
+@game:
+	CMP ButtonsA::Right
 	BEQ onRight_game
-	CMP BUTTON_LEFT
+	CMP ButtonsA::Left
 	BEQ onLeft_game
-	CMP BUTTON_SELECT
+	CMP ButtonsA::Select
 	BEQ onSelect_game
-	CMP BUTTON_START
+	CMP ButtonsA::Start
 	BEQ onStart_game
-	CMP BUTTON_B
+	CMP ButtonsA::ButB
 	BEQ onB_game
-	CMP BUTTON_A
+	CMP ButtonsA::ButY
 	BEQ onA_game
 	JMP __MAIN
 
-onRight_splash:                ;
+onRight_splash:
 	JSR NextDifficulty_splash
 	JMP __MAIN
 
@@ -65,7 +54,7 @@ onLeft_splash:
 	JSR PrevDifficulty_splash
 	JMP __MAIN
 
-onStart_splash:                ;
+onStart_splash:
 	JSR Toggle_sound
 	JMP __MAIN
 
@@ -75,13 +64,13 @@ onB_splash:
 	JSR show_game
 	JMP __MAIN
 
-onA_splash:                    ;
+onA_splash:
 	LDA cursor_splash
 	STA difficulty_player        ; store difficulty
 	JSR show_game
 	JMP __MAIN
 
-onRight_game:                  ;
+onRight_game:
 	INC cursor_game
 	LDA cursor_game
 	CMP #$04
@@ -89,14 +78,14 @@ onRight_game:                  ;
 	; wrap around
 	LDA #$00
 	STA cursor_game
-@done:                         ;
+@done:
 	LDA #$01                     ; request draw for cursor
 	STA reqdraw_cursor
 	STA reqdraw_name
 	JSR Move_sound
 	JMP __MAIN
 
-onLeft_game:                   ;
+onLeft_game:
 	DEC cursor_game
 	LDA cursor_game
 	CMP #$FF
@@ -104,25 +93,25 @@ onLeft_game:                   ;
 	; wrap around
 	LDA #$03
 	STA cursor_game
-@done:                         ;
+@done:
 	LDA #$01                     ; request draw for cursor
 	STA reqdraw_cursor
 	STA reqdraw_name
 	JSR Move_sound
 	JMP __MAIN
 
-onSelect_game:                 ;
+onSelect_game:
 	JSR show_splash
 	JMP __MAIN
 
-onStart_game:                  ;
+onStart_game:
 	JSR Toggle_sound
 	JMP __MAIN
 
-onB_game:                      ;
+onB_game:
 	JSR tryRun_player
 	JMP __MAIN
 
-onA_game:                      ;
+onA_game:
 	JSR tryFlip_room             ; flip selected card
 	JMP __MAIN

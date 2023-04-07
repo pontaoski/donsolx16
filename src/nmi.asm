@@ -1,27 +1,14 @@
 
 ;; NMI
 
-readJoy:
-	LDA #$01
-	STA JOY1                     ; start reading
-	STA down_input
-	LSR a
-	STA JOY1
-@loop:
-	LDA JOY1
-	LSR a
-	ROL down_input
-	BCC @loop
-
-saveJoy:                       ; [skip]
-	LDA down_input
-	CMP last_input
-	BEQ @done
-	STA last_input
-	CMP #$00
-	BEQ @done
-	STA next_input
+; we only care about VSYNC IRQs
+ensureVera:
+	lda Vera::ISR
+	and Interrupts::VSYNC
+	bne @done
+	jmp sendView
 @done:
+	jmp (default_irq_vector)
 
 ;; route screens
 
@@ -42,7 +29,7 @@ viewSplash:
 	BNE @done
 	JMP redrawCursor_splash
 @done:
-	RTI 
+	jmp (default_irq_vector)
 
 viewGame:
 	JSR animateTimer_game
@@ -108,4 +95,4 @@ viewGame:
 	BNE @done
 	JMP redraw_dialog
 @done:
-	RTI 
+	jmp (default_irq_vector)

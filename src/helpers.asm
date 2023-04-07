@@ -5,22 +5,22 @@
 ;; renderer
 
 start_renderer:                ;
-	LDA #%10010000               ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
-	STA PPUCTRL
-	LDA #%00011000               ; enable sprites, enable background, no clipping on left side
-	STA PPUMASK
-	LDA #$00                     ; No background scrolling
-	STA PPUADDR
-	STA PPUADDR
-	STA PPUSCROLL
-	STA PPUSCROLL
+	; LDA #%10010000               ; enable NMI, sprites from Pattern Table 0, background from Pattern Table 1
+	; STA PPUCTRL
+	; LDA #%00011000               ; enable sprites, enable background, no clipping on left side
+	; STA PPUMASK
+	; LDA #$00                     ; No background scrolling
+	; STA PPUADDR
+	; STA PPUADDR
+	; STA PPUSCROLL
+	; STA PPUSCROLL
 	RTS 
 
 stop_renderer:                 ;
-	LDA #%10000000               ; disable NMI, sprites from Pattern Table 0
-	STA PPUCTRL
-	LDA #%00000000               ; disable sprites
-	STA PPUMASK
+	; LDA #%10000000               ; disable NMI, sprites from Pattern Table 0
+	; STA PPUCTRL
+	; LDA #%00000000               ; disable sprites
+	; STA PPUMASK
 	RTS 
 
 fix_renderer:                  ;
@@ -74,4 +74,4 @@ redraw_dialog:                 ;
 	CPX #$18
 	BNE @loop
 	JSR fix_renderer
-	RTI 
+	jmp (default_irq_vector) 

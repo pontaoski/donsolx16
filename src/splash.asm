@@ -55,7 +55,7 @@ redrawCursor_splash:           ;
 	STA $0203                    ; set tile.x pos
 	JSR sprites_renderer
 @done:                         ;
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawScreen_splash:           ;
 	; remove flag
@@ -70,123 +70,96 @@ redrawScreen_splash:           ;
 	JSR addPolycat_splash
 	JSR start_renderer
 @done:
-	RTI 
+	jmp (default_irq_vector) 
 
 ;; load background table
 
 load_splash:                   ;
-	BIT PPUSTATUS
-	LDA #$20
-	STA PPUADDR
-	LDA #$00
-	STA PPUADDR
-	LDA #<data_splash
-	STA lb_temp
-	LDA #>data_splash
-	STA hb_temp
-	LDX #$00
-	LDY #$00
-@loop:                         ;
-	LDA (lb_temp), y
-	STA PPUDATA
-	INY 
-	CPY #$00
-	BNE @loop
-	INC hb_temp
-	INX 
-	CPX #$04
-	BNE @loop
+	RAM2VRAM_PAD SplashMap, Map0VRAM, SPLASH_MAP_SIZE
 	RTS 
 
 ;; load attribute table
 
 loadAttributes_splash:         ;
-	BIT PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$C0
-	STA PPUADDR
-	LDX #$00
-@loop:                         ;
-	LDA attributes_splash, x
-	STA PPUDATA
-	INX 
-	CPX #$40
-	BNE @loop
+; 	BIT PPUSTATUS
+; 	LDA #$23
+; 	STA PPUADDR
+; 	LDA #$C0
+; 	STA PPUADDR
+; 	LDX #$00
+; @loop:                         ;
+; 	LDA attributes_splash, x
+; 	STA PPUDATA
+; 	INX 
+; 	CPX #$40
+; 	BNE @loop
 	RTS 
 
 addScore_splash:               ;
-	BIT PPUSTATUS                ; draw score on splash
-	LDA #$20
-	STA PPUADDR
-	LDA #$EF
-	STA PPUADDR
-	LDX #$00
-	LDX highscore_splash         ; digit 1
-	LDA number_high, x
-	STA PPUDATA
-	LDA number_low, x
-	STA PPUDATA
+	lda number_high, x
+	STA_TILE 16,7
+	lda number_low, x
+	STA_TILE 15,7
 	RTS 
 
 addNecomedre_splash:           ; $6a,$6b,$6e
-	LDA difficulty_splash
-	CMP #$00
-	BEQ @skip
-	BIT PPUSTATUS                ; draw score on splash
-	; head
-	LDA #$22
-	STA PPUADDR
-	LDA #$48
-	STA PPUADDR
-	LDA #$6A
-	STA PPUDATA
-	; torso
-	LDA #$22
-	STA PPUADDR
-	LDA #$68
-	STA PPUADDR
-	LDA #$6B
-	STA PPUDATA
-	; legs
-	LDA #$22
-	STA PPUADDR
-	LDA #$88
-	STA PPUADDR
-	LDA #$6E
-	STA PPUDATA
-@skip:                         ;
+; 	LDA difficulty_splash
+; 	CMP #$00
+; 	BEQ @skip
+; 	BIT PPUSTATUS                ; draw score on splash
+; 	; head
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$48
+; 	STA PPUADDR
+; 	LDA #$6A
+; 	STA PPUDATA
+; 	; torso
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$68
+; 	STA PPUADDR
+; 	LDA #$6B
+; 	STA PPUDATA
+; 	; legs
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$88
+; 	STA PPUADDR
+; 	LDA #$6E
+; 	STA PPUDATA
+; @skip:                         ;
 	RTS 
 
 addPolycat_splash:             ; $6a,$6b,$6e
-	LDA difficulty_splash
-	CMP #$00
-	BEQ @skip
-	CMP #$01
-	BEQ @skip
-	BIT PPUSTATUS                ; draw score on splash
-	; head
-	LDA #$22
-	STA PPUADDR
-	LDA #$77
-	STA PPUADDR
-	LDA #$80
-	STA PPUDATA
-	; torso
-	LDA #$22
-	STA PPUADDR
-	LDA #$98
-	STA PPUADDR
-	LDA #$94
-	STA PPUDATA
-	; legs
-	LDA #$22
-	STA PPUADDR
-	LDA #$97
-	STA PPUADDR
-	LDA #$84
-	STA PPUDATA
-@skip:                         ;
+; 	LDA difficulty_splash
+; 	CMP #$00
+; 	BEQ @skip
+; 	CMP #$01
+; 	BEQ @skip
+; 	BIT PPUSTATUS                ; draw score on splash
+; 	; head
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$77
+; 	STA PPUADDR
+; 	LDA #$80
+; 	STA PPUDATA
+; 	; torso
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$98
+; 	STA PPUADDR
+; 	LDA #$94
+; 	STA PPUDATA
+; 	; legs
+; 	LDA #$22
+; 	STA PPUADDR
+; 	LDA #$97
+; 	STA PPUADDR
+; 	LDA #$84
+; 	STA PPUDATA
+; @skip:                         ;
 	RTS 
 
 updateScore_splash:            ;

@@ -59,7 +59,7 @@ redrawScreen_game:             ;
 	JSR loadInterface_game
 	JSR loadAttributes_game
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 load_game:                     ;
 	BIT PPUSTATUS                ; reset latch
@@ -139,7 +139,7 @@ redrawCursor_game:             ;
 	STA $0203                    ; set tile.x pos
 	JSR sprites_renderer
 @done:                         ;
-	RTI 
+	jmp (default_irq_vector) 
 
 ;; redraw
 
@@ -192,7 +192,7 @@ redrawHealth_game:             ;
 	STA PPUDATA
 @done:                         ;
 	JSR fix_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 ;; shield value
 
@@ -236,7 +236,7 @@ redrawShield_game:             ;
 	LDA card_glyphs, x
 	STA PPUDATA
 	JSR fix_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 ;; experience value
 
@@ -273,7 +273,7 @@ redrawExperience_game:         ;
 	CPX #$06
 	BNE @loop
 	JSR fix_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawRun_game:                ;
 	; remove flag
@@ -307,7 +307,7 @@ redrawRun_game:                ;
 	LDA #$18                     ; N
 	STA PPUDATA
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 @hide:                         ;
 	BIT PPUSTATUS                ; read PPU status to reset the high/low latch
 	LDA #$21
@@ -321,7 +321,7 @@ redrawRun_game:                ;
 	STA PPUDATA
 	STA PPUDATA
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawName_game:               ;
 	; remove trigger
@@ -355,7 +355,7 @@ redrawName_game:               ;
 	CPX #$10
 	BNE @loop
 	JSR fix_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 ;; to merge into a single routine
 
@@ -377,7 +377,7 @@ redrawCard1_game:              ;
 	CPX #$36
 	BNE @loop
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawCard2_game:              ;
 	; remove flag
@@ -397,7 +397,7 @@ redrawCard2_game:              ;
 	CPX #$36
 	BNE @loop
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawCard3_game:              ;
 	; remove flag
@@ -417,7 +417,7 @@ redrawCard3_game:              ;
 	CPX #$36
 	BNE @loop
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 redrawCard4_game:              ;
 	; remove flag
@@ -437,7 +437,7 @@ redrawCard4_game:              ;
 	CPX #$36
 	BNE @loop
 	JSR start_renderer
-	RTI 
+	jmp (default_irq_vector) 
 
 animateTimer_game:             ; when timer reaches 0, set auto_room flag to 1
 	LDA timer_room

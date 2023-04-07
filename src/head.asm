@@ -1,5 +1,16 @@
 ;; constants
 
+.enum ButtonsA
+	Right  = 1 << 0
+	Left   = 1 << 1
+	Down   = 1 << 2
+	Up     = 1 << 3
+	Start  = 1 << 4
+	Select = 1 << 5
+	ButY   = 1 << 6
+	ButB   = 1 << 7
+.endenum
+
 .scope Vera
 	AddrLow        = $9F20
 	AddrHigh       = $9F21
@@ -83,6 +94,12 @@
 	OutputRGB = $3
 .endenum
 
+.enum Interrupts
+	VSYNC = $1
+.endenum
+
+joystick_get = $FF56
+
 PPUCTRL             = $2000 
 PPUMASK             = $2001 
 PPUSTATUS           = $2002 ; Using BIT PPUSTATUS preserves the previous contents of A.
@@ -110,14 +127,6 @@ SPRDMA              = $4014
 APUCTRL             = $4015 
 JOY1                = $4016 
 JOY2                = $4017 
-BUTTON_RIGHT        = $01 
-BUTTON_LEFT         = $02 
-BUTTON_DOWN         = $04 
-BUTTON_UP           = $08 
-BUTTON_START        = $10 
-BUTTON_SELECT       = $20 
-BUTTON_B            = $40 
-BUTTON_A            = $80 
 
 ;; redraw flags
 
@@ -152,9 +161,6 @@ hand_deck               : .res 1
 seed1_deck              : .res 1 ; The seed for the random shuffle(nmi)
 seed2_deck              : .res 1 ; The seed for the random shuffle(main)
 count_tests             : .res 1 ; tests
-down_input              : .res 1 
-last_input              : .res 1 
-next_input              : .res 1 
 card1_room              : .res 1 
 card2_room              : .res 1 
 card3_room              : .res 1 
@@ -189,5 +195,6 @@ reqdraw_splash          : .res 1
 reqdraw_cursor          : .res 1 
 reqdraw_dialog          : .res 1 
 reqdraw_name            : .res 1 
+default_irq_vector      : .res 2
 ptr_src                 : .res 1 
 	.reloc

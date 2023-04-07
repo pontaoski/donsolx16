@@ -1,6 +1,6 @@
 TilesBaseVRAM = $00800
-Map0VRAM = $00000
 PaletteBaseVRAM = $1FA00
+IRQVector = $0314
 
 initGfx:
 	; reset vera
@@ -14,7 +14,7 @@ initGfx:
 	RAM2VRAM Palette, (PaletteBaseVRAM-2), PALETTE_SIZE
 
 	; set up display scaling
-	lda #48 ; 128/64 = 2x scaling
+	lda #64 ; 128/64 = 2x scaling
 	sta Vera::DC::HScale
 	sta Vera::DC::VScale
 
@@ -47,22 +47,26 @@ initGfx:
 	lda #(VideoConfig::Layer1 | VideoConfig::OutputVGA)
 	sta Vera::DC::Video
 
-	; prod some things
-	lda #$10
-	sta Vera::AddrBank
-	stz Vera::AddrHigh
-	stz Vera::AddrLow
+	; hook into vera irq
+		sei
 
-	stz Vera::Data0
-	stz Vera::Data0
+		; back up kernal handler
+   		lda IRQVector
+   		sta default_irq_vector
+   		lda IRQVector+1
+   		sta default_irq_vector+1
 
-	lda #$1
-	sta Vera::Data0
-	stz Vera::Data0
+		; overwrite RAM vectors
+		lda #<__NMI
+		sta IRQVector
+		lda #>__NMI
+		sta IRQVector+1
 
-	lda #$2
-	sta Vera::Data0
-	stz Vera::Data0
+		; tell vera we want vsync interrupts only
+		lda #(Interrupts::VSYNC)
+		sta Vera::IEN
+
+		cli
 
 initLogic:
 	JSR show_splash

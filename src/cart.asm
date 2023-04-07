@@ -37,7 +37,7 @@ __MAIN:                        ;
 
 __NMI:                         ;
 	.INCLUDE "nmi.asm"            ;
-	RTI                          ; return from interrupt
+	jmp (default_irq_vector)                          ; return from interrupt
 
 ;; includes
 
