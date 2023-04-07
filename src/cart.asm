@@ -48,7 +48,7 @@ __NMI:                         ;
 	.INCLUDE "deck.asm"
 	.INCLUDE "player.asm"
 	.INCLUDE "room.asm"
-	.INCLUDE "tests.asm"
+	; .INCLUDE "tests.asm"
 	.INCLUDE "tables.asm"
 
 ;; vectors

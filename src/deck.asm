@@ -7,7 +7,7 @@ init_deck:                     ;
 	LDX #$00
 @loop:                         ;
 	TXA 
-	STA $80, x                   ; fill the deck with cards(ordered)
+	STA CardDeck, x                   ; fill the deck with cards(ordered)
 	INX 
 	CPX #$36
 	BNE @loop
@@ -20,7 +20,7 @@ pullCard_deck:                 ;
 	CMP #$00
 	BEQ @finished
 	; when cards are left
-	LDA $80
+	LDA CardDeck
 	STA hand_deck
 	JSR shift_deck
 	RTS 
@@ -34,7 +34,7 @@ pullCard_deck:                 ;
 returnCard_deck:               ; (a:card_id)
 	LDX length_deck
 	INX 
-	STA $80, x
+	STA CardDeck, x
 	INC length_deck
 	RTS 
 
@@ -47,8 +47,8 @@ shift_deck:                    ;
 	TXA 
 	TAY 
 	INY 
-	LDA $80, y
-	STA $80, x
+	LDA CardDeck, y
+	STA CardDeck, x
 	INX 
 	; experiment
 	TXA 
@@ -222,8 +222,8 @@ shuffle_deck:                  ; shuffle deck by pushing all cards to $C0 on zer
 	LDX #$00
 @send0_loop:                   ;
 	LDY shuffle0, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send0_loop
@@ -242,8 +242,8 @@ mix_deck:                      ;
 	LDX #$00
 @send0_loop:                   ;
 	LDY shuffle0, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send0_loop
@@ -257,8 +257,8 @@ mix_deck:                      ;
 	LDX #$00
 @send1_loop:                   ;
 	LDY shuffle1, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send1_loop
@@ -272,8 +272,8 @@ mix_deck:                      ;
 	LDX #$00
 @send2_loop:                   ;
 	LDY shuffle2, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send2_loop
@@ -287,8 +287,8 @@ mix_deck:                      ;
 	LDX #$00
 @send3_loop:                   ;
 	LDY shuffle3, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send3_loop
@@ -302,8 +302,8 @@ mix_deck:                      ;
 	LDX #$00
 @send4_loop:                   ;
 	LDY shuffle4, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send4_loop
@@ -317,8 +317,8 @@ mix_deck:                      ;
 	LDX #$00
 @send5_loop:                   ;
 	LDY shuffle5, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send5_loop
@@ -332,8 +332,8 @@ mix_deck:                      ;
 	LDX #$00
 @send6_loop:                   ;
 	LDY shuffle6, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send6_loop
@@ -347,8 +347,8 @@ mix_deck:                      ;
 	LDX #$00
 @send7_loop:                   ;
 	LDY shuffle7, x              ; store the value
-	LDA $80, y
-	STA $C0, x
+	LDA CardDeck, y
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @send7_loop
@@ -360,10 +360,10 @@ mix_deck:                      ;
 return_deck:                   ;
 	LDX #$00
 @loop:                         ;
-	LDA $C0, x                   ; move $C0 to $80
-	STA $80, x
+	LDA ShufDeck, x                   ; move $C0 to $80
+	STA CardDeck, x
 	LDA #$00                     ; clear
-	STA $C0, x
+	STA ShufDeck, x
 	INX 
 	CPX #$36
 	BNE @loop

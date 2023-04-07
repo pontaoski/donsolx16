@@ -126,13 +126,13 @@
 joystick_scan = $FF53
 joystick_get = $FF56
 
-PPUCTRL             = $2000 
-PPUMASK             = $2001 
-PPUSTATUS           = $2002 ; Using BIT PPUSTATUS preserves the previous contents of A.
-SPRADDR             = $2003 
-PPUSCROLL           = $2005 
-PPUADDR             = $2006 
-PPUDATA             = $2007 
+; PPUCTRL             = $2000 
+; PPUMASK             = $2001 
+; PPUSTATUS           = $2002 ; Using BIT PPUSTATUS preserves the previous contents of A.
+; SPRADDR             = $2003 
+; PPUSCROLL           = $2005 
+; PPUADDR             = $2006 
+; PPUDATA             = $2007 
 APUCH1VOL           = $4000 ; APU
 APUCH1SWP           = $4001 
 APUCH1FRQ           = $4002 
@@ -224,4 +224,12 @@ reqdraw_name            : .res 1
 default_irq_vector      : .res 2
 previous_input          : .res 1
 ptr_src                 : .res 1 
+	.reloc
+
+	.org $80
+	CardDeck
+	.reloc
+
+	.org $80
+	ShufDeck
 	.reloc

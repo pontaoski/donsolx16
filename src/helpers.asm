@@ -24,19 +24,19 @@ stop_renderer:                 ;
 	RTS 
 
 fix_renderer:                  ;
-	BIT PPUSTATUS
-	LDA #$00                     ; No background scrolling
-	STA PPUADDR
-	STA PPUADDR
-	STA PPUSCROLL
-	STA PPUSCROLL
+	; BIT PPUSTATUS
+	; LDA #$00                     ; No background scrolling
+	; STA PPUADDR
+	; STA PPUADDR
+	; STA PPUSCROLL
+	; STA PPUSCROLL
 	RTS 
 
 sprites_renderer:              ; TODO: figure out why this is needed..
-	LDA #$00
-	STA SPRADDR                  ; set the low byte (00) of the RAM address
-	LDA #$02
-	STA SPRDMA                   ; set the high byte (02) of the RAM address, start the transfer
+	; LDA #$00
+	; STA SPRADDR                  ; set the low byte (00) of the RAM address
+	; LDA #$02
+	; STA SPRDMA                   ; set the high byte (02) of the RAM address, start the transfer
 	RTS 
 
 ;; dialog
@@ -51,12 +51,8 @@ redraw_dialog:                 ;
 	; remove flag
 	LDA #$00
 	STA reqdraw_dialog
-	BIT PPUSTATUS
-	LDA #$23
-	STA PPUADDR
-	LDA #$03
-	STA PPUADDR
-	LDX #$00
+
+	PREPARE_TILE 3,24
 @loop:                         ;
 	LDY id_dialog
 	LDA dialogs_offset_low,y
@@ -69,7 +65,8 @@ redraw_dialog:                 ;
 	ADC id_temp
 	TAY 
 	LDA (lb_temp), y             ; load value at 16-bit address from (lb_temp + hb_temp) + y
-	STA PPUDATA
+	STA Vera::Data0
+	STZ Vera::Data0
 	INX 
 	CPX #$18
 	BNE @loop

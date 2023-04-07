@@ -17,19 +17,20 @@ Map0VRAM = $00000
    stx Vera::AddrLow
 .endmacro
 
+.macro PREPARE_TILE tx, ty
+   stz Vera::CTRL
+   ldx #($10 | ( (ty*32*2 + tx*2) >>16))
+   stx Vera::AddrBank
+   ldx #>(ty*32*2 + tx*2)
+   stx Vera::AddrHigh
+   ldx #<(ty*32*2 + tx*2)
+   stx Vera::AddrLow
+.endmacro
+
 .macro STA_TILE tx, ty
-   .scope
-      Address = ty*32*2 + tx*2
-      stz Vera::CTRL
-      ldx #($10 | (Address>>16))
-      stx Vera::AddrBank
-      ldx #>Address
-      stx Vera::AddrHigh
-      ldx #<Address
-      stx Vera::AddrLow
-      sta Vera::Data0
-      stz Vera::Data0
-   .endscope
+   PREPARE_TILE tx, ty
+   sta Vera::Data0
+   stz Vera::Data0
 .endmacro
 
 .macro ZERO_VRAM vram_addr, num_bytes
