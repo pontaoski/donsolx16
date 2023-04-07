@@ -1,9 +1,17 @@
 TilesBaseVRAM = $00800
 Map0VRAM = $00000
+PaletteBaseVRAM = $1FA00
 
 initGfx:
-	RAM2VRAM Tiles, TilesBaseVRAM, TILES_SIZE
-	; RAM2VRAM Palette, ???, PALETTE_SIZE
+	; reset vera
+	lda #$80
+	sta Vera::CTRL ; $9F25
+
+	; zero out vram
+	ZERO_VRAM Map0VRAM, 2048
+
+	RAM2VRAM Tiles, (TilesBaseVRAM-2), TILES_SIZE
+	RAM2VRAM Palette, (PaletteBaseVRAM-2), PALETTE_SIZE
 
 	; set up display scaling
 	lda #48 ; 128/64 = 2x scaling
@@ -33,10 +41,10 @@ initGfx:
 
 	; set background to black
 	lda #0
-	sta Vera::DC::Border
+	sta Vera::DC::Border ; $9F2C
 
 	; enable display
-	lda #(VideoConfig::Layer1)
+	lda #(VideoConfig::Layer1 | VideoConfig::OutputVGA)
 	sta Vera::DC::Video
 
 	; prod some things

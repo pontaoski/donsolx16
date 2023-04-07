@@ -76,6 +76,11 @@
 	Layer1 = $10
 	Sprites = $20
 	CurrentField = $40
+
+	OutputOff = $0
+	OutputVGA = $1
+	OutputNTSC = $2
+	OutputRGB = $3
 .endenum
 
 PPUCTRL             = $2000 

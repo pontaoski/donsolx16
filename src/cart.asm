@@ -13,12 +13,12 @@
 ;; include sprites
 
 Tiles:
-	.incbin "sprite.bin"
+	.incbin "../data/tiles.bin"
 Tiles_end:
 	TILES_SIZE = Tiles_end - Tiles
 
 Palette:
-	.incbin "palette.bin"
+	.incbin "../data/tiles.bin.PAL"
 Palette_end:
 	PALETTE_SIZE = Palette_end - Palette
 
