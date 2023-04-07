@@ -1,95 +1,65 @@
+TilesBaseVRAM = $00800
+Map0VRAM = $00000
 
-;; init
+initGfx:
+	RAM2VRAM Tiles, TilesBaseVRAM, TILES_SIZE
+	; RAM2VRAM Palette, ???, PALETTE_SIZE
 
-	SEI                          ; disable IRQs
-	CLD                          ; disable decimal mode
-	LDX #$40
-	STX JOY2                     ; disable APU frame IRQ
-	LDX #$FF
-	TXS                          ; Set up stack
-	INX                          ; now X = 0
-	STX PPUCTRL                  ; disable NMI
-	STX PPUMASK                  ; disable rendering
-	STX $4010                    ; disable DMC IRQs
-@vwait1:                       ; First wait for vblank to make sure PPU is ready
-	BIT PPUSTATUS
-	BPL @vwait1
-@clear:                        ;
-	LDA #$00
-	STA $0000, x
-	STA $0100, x
-	STA $0300, x
-	STA $0400, x
-	STA $0500, x
-	STA $0600, x
-	STA $0700, x
-	LDA #$FE
-	STA $0200, x                 ; move all sprites off screen
-	INX 
-	BNE @clear
-@vwait2:                       ; Second wait for vblank, PPU is ready after this
-	BIT PPUSTATUS
-	BPL @vwait2
+	; set up display scaling
+	lda #48 ; 128/64 = 2x scaling
+	sta Vera::DC::HScale
+	sta Vera::DC::VScale
 
-;; Init
+	; configure layer 0
+		; general config
 
-Clear_vram_loop:
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	STA PPUDATA
-	DEY 
-	BNE Clear_vram_loop
-	DEX 
-	BNE Clear_vram_loop
-	;load sprite base
+		lda #(LayerConfig::MapW32 | LayerConfig::MapH32 | LayerConfig::Tile | LayerConfig::Bpp2)
+		sta Vera::L0::Config
 
-	LDA #$00
-	STA PPUADDR
-	LDA #$00
-	STA PPUADDR
+		; configure map
+		lda #(Map0VRAM>>9)
+		sta Vera::L0::MapBase
 
-Load_sprites:
-	LDA #Sprites&255
-	STA ptr_src
-	LDA #Sprites/256
-	STA ptr_src+1
-	LDY #0                       ; starting index into the first page
-	STY PPUMASK                  ; turn off rendering just in case
-	STY PPUADDR                  ; load the destination address into the PPU
-	STY PPUADDR
-	LDX #32                      ; number of 256-byte pages to copy
+		; configure tiles
+		lda #(TilesBaseVRAM>>9 | TileConfig::W8 | TileConfig::H8)
+		sta Vera::L0::TileBase
 
-Loop:
-	LDA (ptr_src),y              ; copy one byte
-	STA PPUDATA
-	INY 
-	BNE Loop                     ; repeat until we finish the page
-	INC ptr_src+1                ; go to the next page
-	DEX 
-	BNE Loop                     ; repeat until we've copied enough pages
+		; reset scrolling
+		stz Vera::L0::HScroll_Low
+		stz Vera::L0::HScroll_High
 
-loadPalette:                   ; [skip]
-	BIT PPUSTATUS
-	LDA #$3F
-	STA PPUADDR
-	LDA #$00
-	STA PPUADDR
-	LDX #$00
-@loop:                         ;
-	LDA palettes, x
-	STA PPUDATA
-	INX 
-	CPX #$20
-	BNE @loop
+		stz Vera::L0::VScroll_Low
+		stz Vera::L0::VScroll_High
+
+	; set background to black
+	lda #0
+	sta Vera::DC::Border
+
+	; enable display
+	lda #(VideoConfig::Layer1)
+	sta Vera::DC::Video
+
+	; prod some things
+	lda #$10
+	sta Vera::AddrBank
+	stz Vera::AddrHigh
+	stz Vera::AddrLow
+
+	stz Vera::Data0
+	stz Vera::Data0
+
+	lda #$1
+	sta Vera::Data0
+	stz Vera::Data0
+
+	lda #$2
+	sta Vera::Data0
+	stz Vera::Data0
+
+initLogic:
 	JSR show_splash
 	JSR start_renderer
 
-;; Run tests
+initAudio:
+	; JSR Enable_sound
 
-	JSR Enable_sound
-	; JSR run_tests

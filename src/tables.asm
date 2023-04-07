@@ -5,10 +5,6 @@
 
 ;; $30 -> white | $16 -> red | $3B -> cyan | $2D -> dark grey
 
-palettes:                      ;
-	.byte $0F,$16,$00,$30, $0F,$3B,$16,$30, $0F,$00,$3B,$30, $0F,$3B,$30,$30 ; background
-	.byte $0F,$16,$00,$30, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F, $0F,$0F,$0F,$0F ; sprites
-
 ;; Attributes
 
 attributes_game:               ;

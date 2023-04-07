@@ -1,5 +1,83 @@
 ;; constants
 
+.scope Vera
+	AddrLow        = $9F20
+	AddrHigh       = $9F21
+	AddrBank       = $9F22
+	Data0          = $9F23
+	CTRL           = $9F25
+	IEN            = $9F26
+	ISR            = $9F27
+
+	.scope DC
+		Video       = $9F29
+		HScale      = $9F2A
+		VScale      = $9F2B
+		Border      = $9F2C
+		HStart      = $9F29
+		HStop       = $9F2A
+		VStart      = $9F2B
+		VStop       = $9F2C
+	.endscope
+
+	.scope L0
+		Config         = $9F2D
+		MapBase        = $9F2E
+		TileBase       = $9F2F
+		HScroll_Low    = $9F30
+		HScroll_High   = $9F31
+		VScroll_Low    = $9F32
+		VScroll_High   = $9F33
+	.endscope
+
+	.scope L1
+		Config         = $9F34
+		MapBase        = $9F35
+		TileBase       = $9F36
+		HScroll_Low    = $9F37
+		HScroll_High   = $9F38
+		VScroll_Low    = $9F39
+		VScroll_High   = $9F3A
+	.endscope
+.endscope
+
+.enum LayerConfig
+	Bpp1 = $0
+	Bpp2 = $1
+	Bpp4 = $2
+	Bpp8 = $3
+
+	Tile = $0
+	Bitmap = $4
+
+	T256COff = $0
+	T256COn  = $8
+
+	MapW32  = $0
+	MapW64  = $10
+	MapW128 = $20
+	MapW256 = $30
+
+	MapH32  = $0
+	MapH64  = $40
+	MapH128 = $80
+	MapH256 = $C0
+.endenum
+
+.enum TileConfig
+	W8  = $0
+	W16 = $1
+	H8  = $0
+	H16 = $2
+.endenum
+
+.enum VideoConfig
+	Layer0 = $8
+	Layer1 = $10
+	Sprites = $20
+	CurrentField = $40
+.endenum
+
 PPUCTRL             = $2000 
 PPUMASK             = $2001 
 PPUSTATUS           = $2002 ; Using BIT PPUSTATUS preserves the previous contents of A.

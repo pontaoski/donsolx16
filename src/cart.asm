@@ -1,15 +1,26 @@
+;; Startup
+
+.SEGMENT "STARTUP"
+.SEGMENT "INIT"
+.SEGMENT "ONCE"
+	jmp __INIT
 
 ;; Cart
 
 	.INCLUDE "head.asm"
+	.INCLUDE "macros.asm"
 
 ;; include sprites
 
-	.org $8000
+Tiles:
+	.incbin "sprite.bin"
+Tiles_end:
+	TILES_SIZE = Tiles_end - Tiles
 
-Sprites:
-	.incbin "sprite.chr"
-	.org $C000
+Palette:
+	.incbin "palette.bin"
+Palette_end:
+	PALETTE_SIZE = Palette_end - Palette
 
 ;; init
 
