@@ -43,17 +43,18 @@ redrawCursor_splash:           ;
 	; remove flag
 	LDA #$00
 	STA reqdraw_cursor
-	; setup
-	LDA #$C8
-	STA $0200                    ; (part1)set tile.y pos
-	LDA #$12
-	STA $0201                    ; (part1)set tile.id
-	LDA #$00
-	STA $0202                    ; (part1)set tile.attribute[off]
+
+	; set x pos
+	TARGET_SPRITE_AUTOINCR (CursorSprite+2)
 	LDX cursor_splash
 	LDA selections_splash, x
-	STA $0203                    ; set tile.x pos
-	JSR sprites_renderer
+	STA Vera::Data0
+	STZ Vera::Data0
+
+	; set y pos
+	LDA #$C8
+	STA Vera::Data0
+	STZ Vera::Data0
 @done:                         ;
 	jmp (default_irq_vector) 
 

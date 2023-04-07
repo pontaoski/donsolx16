@@ -83,10 +83,10 @@
 .endenum
 
 .enum VideoConfig
-	Layer0 = $8
-	Layer1 = $10
-	Sprites = $20
-	CurrentField = $40
+	Layer0 = 1<<4
+	Layer1 = 1<<5
+	Sprites = 1<<6
+	CurrentField = 1<<7
 
 	OutputOff = $0
 	OutputVGA = $1
@@ -94,10 +94,36 @@
 	OutputRGB = $3
 .endenum
 
+.enum SpriteConfig
+	; offset 1
+	Bpp4 = 0
+	Bpp8 = 1<<7
+
+	; offset 6
+	HFlip = 1<<0
+	VFlip = 1<<1
+
+	ZDepth0 = 0
+	ZDepth1 = 1<<2 ; between bg and layer 0
+	ZDepth2 = 2<<2 ; between layer 0 and layer 1
+	ZDepth3 = 3<<2 ; in front of layer 1
+
+	; offset 7
+	Width8  = 0
+	Width16 = 1<<4
+	Width32 = 2<<4
+	Width64 = 3<<4
+	Height8  = 0
+	Height16 = 1<<6
+	Height32 = 2<<6
+	Height64 = 3<<6
+.endenum
+
 .enum Interrupts
 	VSYNC = $1
 .endenum
 
+joystick_scan = $FF53
 joystick_get = $FF56
 
 PPUCTRL             = $2000 
@@ -196,5 +222,6 @@ reqdraw_cursor          : .res 1
 reqdraw_dialog          : .res 1 
 reqdraw_name            : .res 1 
 default_irq_vector      : .res 2
+previous_input          : .res 1
 ptr_src                 : .res 1 
 	.reloc

@@ -4,8 +4,8 @@
 ; we only care about VSYNC IRQs
 ensureVera:
 	lda Vera::ISR
-	and Interrupts::VSYNC
-	bne @done
+	and #(Interrupts::VSYNC)
+	beq @done
 	jmp sendView
 @done:
 	jmp (default_irq_vector)

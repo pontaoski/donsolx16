@@ -1,6 +1,8 @@
 TilesBaseVRAM = $00800
 PaletteBaseVRAM = $1FA00
 IRQVector = $0314
+SpritesVRAM = $1FC00
+CursorSprite = SpritesVRAM
 
 initGfx:
 	; reset vera
@@ -9,6 +11,7 @@ initGfx:
 
 	; zero out vram
 	ZERO_VRAM Map0VRAM, 2048
+	ZERO_VRAM SpritesVRAM, 2048
 
 	RAM2VRAM Tiles, (TilesBaseVRAM-2), TILES_SIZE
 	RAM2VRAM Palette, (PaletteBaseVRAM-2), PALETTE_SIZE
@@ -18,10 +21,26 @@ initGfx:
 	sta Vera::DC::HScale
 	sta Vera::DC::VScale
 
+	; configure cursor sprite
+		TARGET_SPRITE_AUTOINCR CursorSprite
+
+		lda #( ($02A40 >> 5) & $FF )
+		sta Vera::Data0 ; set address of gfx
+		lda #( ($02A40 >> 13) & $F )
+		sta Vera::Data0
+		stz Vera::Data0 ; zero out X
+		stz Vera::Data0
+		stz Vera::Data0 ; zero out Y
+		stz Vera::Data0
+		lda #(SpriteConfig::ZDepth2)
+		sta Vera::Data0
+		lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+		sta Vera::Data0
+
 	; configure layer 0
 		; general config
 
-		lda #(LayerConfig::MapW32 | LayerConfig::MapH32 | LayerConfig::Tile | LayerConfig::Bpp2)
+		lda #(LayerConfig::MapW32 | LayerConfig::MapH32 | LayerConfig::Tile | LayerConfig::Bpp4)
 		sta Vera::L0::Config
 
 		; configure map
@@ -44,7 +63,7 @@ initGfx:
 	sta Vera::DC::Border ; $9F2C
 
 	; enable display
-	lda #(VideoConfig::Layer1 | VideoConfig::OutputVGA)
+	lda #(VideoConfig::Sprites | VideoConfig::Layer0 | VideoConfig::OutputVGA)
 	sta Vera::DC::Video
 
 	; hook into vera irq

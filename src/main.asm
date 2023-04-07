@@ -10,40 +10,69 @@ handleTimer:                   ; when auto_room is 1, do post flip actions
 @skip:
 
 handleJoy:
+	JSR joystick_scan
 	LDA #0
 	JSR joystick_get
+	CMP previous_input
+	STA previous_input
 
-	; INC seed1_deck               ; increment seed1
-	; INC seed2_deck               ; increment seed2 on input
+	BNE handleInput
 
+	INC seed1_deck               ; increment seed1 on no input
+	JMP __MAIN
+
+handleInput:
+	INC seed2_deck               ; increment seed2 on input
 	LDX view_game
 	CPX #$00
-	BNE @game
-@splash:
-	CMP ButtonsA::Right
+	BNE handleJoyGame
+handleJoySplash:
+	JSR joystick_scan
+	LDA #0
+	JSR joystick_get
+	TAX
+
+	TXA
+	AND #ButtonsA::Right
 	BEQ onRight_splash
-	CMP ButtonsA::Left
+	TXA
+	AND #ButtonsA::Left
 	BEQ onLeft_splash
-	CMP ButtonsA::Start
+	TXA
+	AND #ButtonsA::Start
 	BEQ onStart_splash
-	CMP ButtonsA::ButB
+	TXA
+	AND #ButtonsA::ButB
 	BEQ onB_splash
-	CMP ButtonsA::ButY
+	TXA
+	AND #ButtonsA::ButY
 	BEQ onA_splash
 	JMP __MAIN
-@game:
-	CMP ButtonsA::Right
+handleJoyGame:
+	JSR joystick_scan
+	LDA #0
+	JSR joystick_get
+	TAX
+
+	TXA
+	AND #ButtonsA::Right
 	BEQ onRight_game
-	CMP ButtonsA::Left
+	TXA
+	AND #ButtonsA::Left
 	BEQ onLeft_game
-	CMP ButtonsA::Select
+	TXA
+	AND #ButtonsA::Select
 	BEQ onSelect_game
-	CMP ButtonsA::Start
+	TXA
+	AND #ButtonsA::Start
 	BEQ onStart_game
-	CMP ButtonsA::ButB
+	TXA
+	AND #ButtonsA::ButB
 	BEQ onB_game
-	CMP ButtonsA::ButY
+	TXA
+	AND #ButtonsA::ButY
 	BEQ onA_game
+
 	JMP __MAIN
 
 onRight_splash:

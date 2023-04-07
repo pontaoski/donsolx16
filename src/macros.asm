@@ -1,10 +1,27 @@
 Map0VRAM = $00000
 
+.macro FOREVER
+   .scope
+      forever:
+         jmp forever
+   .endscope
+.endmacro
+
+.macro TARGET_SPRITE_AUTOINCR addr
+   stz Vera::CTRL
+   ldx #($10 | (addr>>16))
+   stx Vera::AddrBank
+   ldx #>addr
+   stx Vera::AddrHigh
+   ldx #<addr
+   stx Vera::AddrLow
+.endmacro
+
 .macro STA_TILE tx, ty
    .scope
       Address = ty*32*2 + tx*2
       stz Vera::CTRL
-      ldx #($10 | ^Address)
+      ldx #($10 | (Address>>16))
       stx Vera::AddrBank
       ldx #>Address
       stx Vera::AddrHigh
@@ -19,7 +36,7 @@ Map0VRAM = $00000
    .scope
       ; set data port 0 to start writing to VRAM address
       stz Vera::CTRL
-      lda #($10 | ^vram_addr) ; stride = 1
+      lda #($10 | (vram_addr>>16)) ; stride = 1
       sta Vera::AddrBank
       lda #>vram_addr
       sta Vera::AddrHigh
@@ -48,7 +65,7 @@ Map0VRAM = $00000
    .scope
       ; set data port 0 to start writing to VRAM address
       stz Vera::CTRL
-      lda #($10 | ^vram_addr) ; stride = 1
+      lda #($10 | (vram_addr>>16)) ; stride = 1
       sta Vera::AddrBank
       lda #>vram_addr
       sta Vera::AddrHigh
@@ -83,7 +100,7 @@ Map0VRAM = $00000
    .scope
       ; set data port 0 to start writing to VRAM address
       stz Vera::CTRL
-      lda #($10 | ^vram_addr) ; stride = 1
+      lda #($10 | (vram_addr>>16)) ; stride = 1
       sta Vera::AddrBank
       lda #>vram_addr
       sta Vera::AddrHigh
