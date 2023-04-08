@@ -217,155 +217,62 @@ runDamages:                    ;
 
 ;; Shuffle
 
-shuffle_deck:                  ; shuffle deck by pushing all cards to $C0 on zero-page
+.macro POKE seed
+	pha
+	lda seed
+	beq @doEor
+	asl
+	bcc @noEor
+@doEor:
+	eor #$1d
+@noEor:
+	sta seed
+	pla
+	rts
+.endmacro
+
+poke_seed1:
+	POKE seed1_deck
+poke_seed2:
+	POKE seed2_deck
+
+seed1_between:
+	jsr poke_seed1
+@ensureX
+	; ensure x <= seed1_deck
+	cpx seed1_deck
+	beq @ensureY
+	bcs seed1_between
+@ensureY:
+	; ensure seed1_deck <= y
+	cpy seed1_deck
+	beq @done
+	bcc seed1_between
+@done:
+	rts
+
+shuffle_deck:
 	; initial shuffle
-	LDX #$00
+	ldx #$00
+
+@loop:
+	ldy #$35
+	jsr seed1_between
+
+	ldy CardDeck, x
+	sty swap_temp
+
+	phx
+		ldx seed1_deck
+		ldy CardDeck, x
+		lda swap_temp
+		sta CardDeck, x
+	plx
+
+	sty CardDeck, x
+
+	inx
+	cpx #$36
+	bne @loop
+
 	RTS
-; @send0_loop:                   ;
-; 	LDY shuffle0, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send0_loop
-; 	JSR mix_deck
-; 	LDA seed2_deck
-; 	STA seed1_deck
-; 	JSR mix_deck
-; 	RTS 
-
-; mix_deck:                      ;
-; @send0:                        ;
-; 	LDA seed1_deck
-; 	AND #%00000001
-; 	BEQ @send1
-; 	; begin
-; 	LDX #$00
-; @send0_loop:                   ;
-; 	LDY shuffle0, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send0_loop
-; 	JSR return_deck
-; 	; end
-; @send1:                        ;
-; 	LDA seed1_deck
-; 	AND #%00000010
-; 	BEQ @send2
-; 	; begin
-; 	LDX #$00
-; @send1_loop:                   ;
-; 	LDY shuffle1, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send1_loop
-; 	JSR return_deck
-; 	; end
-; @send2:                        ;
-; 	LDA seed1_deck
-; 	AND #%00000100
-; 	BEQ @send3
-; 	; begin
-; 	LDX #$00
-; @send2_loop:                   ;
-; 	LDY shuffle2, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send2_loop
-; 	JSR return_deck
-; 	; end
-; @send3:                        ;
-; 	LDA seed1_deck
-; 	AND #%00001000
-; 	BEQ @send4
-; 	; begin
-; 	LDX #$00
-; @send3_loop:                   ;
-; 	LDY shuffle3, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send3_loop
-; 	JSR return_deck
-; 	; end
-; @send4:                        ;
-; 	LDA seed1_deck
-; 	AND #%00010000
-; 	BEQ @send5
-; 	; begin
-; 	LDX #$00
-; @send4_loop:                   ;
-; 	LDY shuffle4, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send4_loop
-; 	JSR return_deck
-; 	; end
-; @send5:                        ;
-; 	LDA seed1_deck
-; 	AND #%00100000
-; 	BEQ @send6
-; 	; begin
-; 	LDX #$00
-; @send5_loop:                   ;
-; 	LDY shuffle5, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send5_loop
-; 	JSR return_deck
-; 	; end
-; @send6:                        ;
-; 	LDA seed1_deck
-; 	AND #%01000000
-; 	BEQ @send7
-; 	; begin
-; 	LDX #$00
-; @send6_loop:                   ;
-; 	LDY shuffle6, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send6_loop
-; 	JSR return_deck
-; 	; end
-; @send7:                        ;
-; 	LDA seed1_deck
-; 	AND #%10000000
-; 	BEQ @done
-; 	; begin
-; 	LDX #$00
-; @send7_loop:                   ;
-; 	LDY shuffle7, x              ; store the value
-; 	LDA CardDeck, y
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @send7_loop
-; 	JSR return_deck
-; 	; end
-; @done:
-	RTS 
-
-return_deck:                   ;
-; 	LDX #$00
-; @loop:                         ;
-; 	LDA ShufDeck, x                   ; move $C0 to $80
-; 	STA CardDeck, x
-; 	LDA #$00                     ; clear
-; 	STA ShufDeck, x
-; 	INX 
-; 	CPX #$36
-; 	BNE @loop
-	RTS 

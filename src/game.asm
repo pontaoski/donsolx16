@@ -1,7 +1,15 @@
 
 ;; Game
 
-show_game:                     ;
+show_game:
+	TARGET_SPRITE_AUTOINCR (SplashCursorSprite+6)
+	lda #(SpriteConfig::ZDepth0)
+	sta Vera::Data0
+
+	TARGET_SPRITE_AUTOINCR (GameCursorSprite+6)
+	lda #(SpriteConfig::ZDepth2)
+	sta Vera::Data0
+
 	LDA #$01
 	STA reqdraw_game
 	STA reqdraw_cursor
@@ -9,9 +17,9 @@ show_game:                     ;
 	JSR restart_game             ; restart
 	RTS 
 
-restart_game:                  ;
+restart_game:
 	JSR init_deck                ; deck
-	; JSR shuffle_deck
+	JSR shuffle_deck
 	JSR reset_player             ; player
 	JSR enter_room
 	LDA #$0D
@@ -93,22 +101,24 @@ loadAttributes_game:
 	; TODO: initialize palettes
 	RTS 
 
-redrawCursor_game:             ;
+redrawCursor_game:
 	; remove flag
 	LDA #$00
 	STA reqdraw_cursor
-	; setup
-	LDA #$B0
-	STA $0200                    ; (part1)set tile.y pos
-	LDA #$13
-	STA $0201                    ; (part1)set tile.id
-	LDA #$00
-	STA $0202                    ; (part1)set tile.attribute[off]
+
+	; set x pos
+	TARGET_SPRITE_AUTOINCR (GameCursorSprite+2)
 	LDX cursor_game
 	LDA selections_game, x
-	STA $0203                    ; set tile.x pos
-	JSR sprites_renderer
-@done:                         ;
+	STA Vera::Data0
+	STZ Vera::Data0
+
+	; set y pos
+	LDA #$B0
+	STA Vera::Data0
+	STZ Vera::Data0
+
+@done:
 	jmp (default_irq_vector) 
 
 ;; redraw

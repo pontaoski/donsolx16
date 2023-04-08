@@ -207,6 +207,7 @@ difficulty_splash       : .res 1 ; keep difficulty in highscore
 lb_temp                 : .res 1 ; utils
 hb_temp                 : .res 1 
 id_temp                 : .res 1 
+swap_temp				: .res 1
 damages_player          : .res 1 ; TODO: check if necessary?
 enabled_sound           : .res 1 
 

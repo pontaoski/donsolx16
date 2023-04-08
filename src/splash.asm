@@ -45,7 +45,7 @@ redrawCursor_splash:           ;
 	STA reqdraw_cursor
 
 	; set x pos
-	TARGET_SPRITE_AUTOINCR (CursorSprite+2)
+	TARGET_SPRITE_AUTOINCR (SplashCursorSprite+2)
 	LDX cursor_splash
 	LDA selections_splash, x
 	STA Vera::Data0

@@ -1,8 +1,10 @@
 TilesBaseVRAM = $00800
 PaletteBaseVRAM = $1FA00
 IRQVector = $0314
+
 SpritesVRAM = $1FC00
-CursorSprite = SpritesVRAM
+SplashCursorSprite = SpritesVRAM
+GameCursorSprite = SplashCursorSprite + 8
 
 initGfx:
 	; reset vera
@@ -21,8 +23,8 @@ initGfx:
 	sta Vera::DC::HScale
 	sta Vera::DC::VScale
 
-	; configure cursor sprite
-		TARGET_SPRITE_AUTOINCR CursorSprite
+	; configure splash cursor sprite
+		TARGET_SPRITE_AUTOINCR SplashCursorSprite
 
 		lda #( ($02A40 >> 5) & $FF )
 		sta Vera::Data0 ; set address of gfx
@@ -33,6 +35,21 @@ initGfx:
 		stz Vera::Data0 ; zero out Y
 		stz Vera::Data0
 		lda #(SpriteConfig::ZDepth2)
+		sta Vera::Data0
+		lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+		sta Vera::Data0
+
+	; configure game cursor sprite
+		TARGET_SPRITE_AUTOINCR GameCursorSprite
+		lda #( ($02A60 >> 5) & $FF )
+		sta Vera::Data0 ; set address of gfx
+		lda #( ($02A60 >> 13) & $F )
+		sta Vera::Data0
+		stz Vera::Data0 ; zero out X
+		stz Vera::Data0
+		stz Vera::Data0 ; zero out Y
+		stz Vera::Data0
+		lda #(SpriteConfig::ZDepth0)
 		sta Vera::Data0
 		lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
 		sta Vera::Data0
