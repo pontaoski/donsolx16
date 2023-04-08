@@ -149,74 +149,29 @@ loadCardsLeft_room:            ; () -> x:count
 	; If $B4 contains $EE AND $B5 contains $12 then the value at memory
 	; location $12EE + Y (6) = $12F4 is fetched AND put in the accumulator.
 
-updateBuffers_room:
-	; card 1 buffer
-	STZ id_temp
-	LDX #$00
-	LDY card1_room
-	LDA cards_offset_low, y      ; find card offset
-	STA lb_temp
-	LDA cards_offset_high, y
-	STA hb_temp
-@loop1:
-	LDY id_temp
-	LDA (lb_temp), y             ; load value at 16-bit address from (lb_temp + hb_temp) + y
-	STA CARDBUF1, y              ; store in buffer
-	INC id_temp
-	LDA id_temp
-	CMP #$36
-	BNE @loop1
-	RTS
+.macro UpdateBuffers card, buffer
+	.scope
+		STZ id_temp
+		LDY card
+		LDA cards_offset_low, y
+		STA lb_temp
+		LDA cards_offset_high, y
+		STA hb_temp
+	@loop:
+		LDY id_temp
+		LDA (lb_temp), y
+		STA buffer, y
+		INC id_temp
+		LDA id_temp
+		CMP #$36
+		BNE @loop
+	.endscope
+.endmacro
 
-	; card 2 buffer
-	LDA #$00
-	STA id_temp
-	LDX #$01
-	LDY card1_room, x
-	LDA cards_offset_low, y      ; find card offset
-	STA lb_temp
-	LDA cards_offset_high, y
-	STA hb_temp
-@loop2:
-	LDY id_temp
-	LDA (lb_temp), y             ; load value at 16-bit address from (lb_temp + hb_temp) + y
-	STA CARDBUF2, y              ; store in buffer
-	INC id_temp
-	LDA id_temp
-	CMP #$36
-	BNE @loop2
-	; card 3 buffer
-	LDA #$00
-	STA id_temp
-	LDX #$02
-	LDY card1_room, x
-	LDA cards_offset_low, y      ; find card offset
-	STA lb_temp
-	LDA cards_offset_high, y
-	STA hb_temp
-@loop3:
-	LDY id_temp
-	LDA (lb_temp), y             ; load value at 16-bit address from (lb_temp + hb_temp) + y
-	STA CARDBUF3, y              ; store in buffer
-	INC id_temp
-	LDA id_temp
-	CMP #$36
-	BNE @loop3
-	; card 4 buffer
-	LDA #$00
-	STA id_temp
-	LDX #$03
-	LDY card1_room, x
-	LDA cards_offset_low, y      ; find card offset
-	STA lb_temp
-	LDA cards_offset_high, y
-	STA hb_temp
-@loop4:
-	LDY id_temp
-	LDA (lb_temp), y             ; load value at 16-bit address from (lb_temp + hb_temp) + y
-	STA CARDBUF4, y              ; store in buffer
-	INC id_temp
-	LDA id_temp
-	CMP #$36
-	BNE @loop4
-	RTS 
+updateBuffers_room:
+	UpdateBuffers card1_room, CARDBUF1
+	UpdateBuffers card2_room, CARDBUF2
+	UpdateBuffers card3_room, CARDBUF3
+	UpdateBuffers card4_room, CARDBUF4
+
+	RTS

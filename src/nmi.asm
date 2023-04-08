@@ -41,12 +41,12 @@ viewGame:
 	JMP redrawScreen_game
 @checkReqSP:
 	LDA redraws_game
-	AND REQ_SP
+	AND #REQ_SP
 	BEQ @checkReqHP
 	JMP redrawShield_game
 @checkReqHP:
 	LDA redraws_game
-	AND REQ_HP
+	AND #REQ_HP
 	BEQ @checkReqCursor
 	JMP redrawHealth_game
 @checkReqCursor:
@@ -61,32 +61,32 @@ viewGame:
 	JMP redrawName_game
 @checkReqCard1:
 	LDA redraws_game
-	AND REQ_CARD1
+	AND #REQ_CARD1
 	BEQ @checkReqCard2
 	JMP redrawCard1_game
 @checkReqCard2:
 	LDA redraws_game
-	AND REQ_CARD2
+	AND #REQ_CARD2
 	BEQ @checkReqCard3
 	JMP redrawCard2_game
 @checkReqCard3:
 	LDA redraws_game
-	AND REQ_CARD3
+	AND #REQ_CARD3
 	BEQ @checkReqCard4
 	JMP redrawCard3_game
 @checkReqCard4:
 	LDA redraws_game
-	AND REQ_CARD4
+	AND #REQ_CARD4
 	BEQ @checkReqXP
 	JMP redrawCard4_game
 @checkReqXP:
 	LDA redraws_game
-	AND REQ_XP
+	AND #REQ_XP
 	BEQ @checkReqRun
 	JMP redrawExperience_game
 @checkReqRun:
 	LDA redraws_game
-	AND REQ_RUN
+	AND #REQ_RUN
 	BEQ @checkReqDialog
 	JMP redrawRun_game
 @checkReqDialog:

@@ -31,7 +31,7 @@ interpolateStats_game:         ;
 	INC spui_game
 @redrawShield:                 ;
 	LDA redraws_game             ; request redraw
-	ORA REQ_SP
+	ORA #REQ_SP
 	STA redraws_game
 	RTS 
 @skip:                         ;
@@ -45,7 +45,7 @@ interpolateStats_game:         ;
 	INC hpui_game
 @redrawHealth:                 ;
 	LDA redraws_game             ; request redraw
-	ORA REQ_HP
+	ORA #REQ_HP
 	STA redraws_game
 @done:                         ;
 	RTS 
@@ -62,7 +62,7 @@ redrawScreen_game:             ;
 	jmp (default_irq_vector) 
 
 load_game:
-	ZERO_VRAM Map0VRAM, 2048
+	ZERO_VRAM Map0VRAM, 1790
 	RTS 
 
 loadInterface_game:
@@ -116,7 +116,7 @@ redrawCursor_game:             ;
 redrawHealth_game:             ;
 	; remove flag
 	LDA redraws_game
-	EOR REQ_HP
+	EOR #REQ_HP
 	STA redraws_game
 	LDY hpui_game
 
@@ -128,20 +128,20 @@ redrawHealth_game:             ;
 	STZ Vera::Data0
 
 	; progress bar
-		; 	LDA healthbarpos, y          ; regA has sprite offset
-		; 	TAY                          ; regY has sprite offset
-		; 	LDX #$00
-		; @loop:                         ;
-		; 	LDA #$20
-		; 	STA PPUADDR                  ; write the high byte
-		; 	LDA healthbaroffset, x
-		; 	STA PPUADDR                  ; write the low byte
-		; 	LDA progressbar, y           ; regA has sprite id
-		; 	STA PPUDATA
-		; 	INY 
-		; 	INX 
-		; 	CPX #$06
-		; 	BNE @loop
+			LDA healthbarpos, y          ; regA has sprite offset
+			TAY                          ; regY has sprite offset
+			LDX #$00
+		@loop:                         ;
+			LDA #$01
+			STA Vera::AddrHigh
+			LDA healthbaroffset, x
+			STA Vera::AddrLow
+			LDA progressbar, y           ; regA has sprite id
+			STA Vera::Data0
+			INY 
+			INX 
+			CPX #$06
+			BNE @loop
 
 	LDA sickness_player
 	CMP #$01
@@ -162,32 +162,32 @@ redrawHealth_game:             ;
 redrawShield_game:             ;
 	; remove flag
 	LDA redraws_game
-	EOR REQ_SP
+	EOR #REQ_SP
 	STA redraws_game
 	LDY spui_game
 
 	; digits
 	LDA number_high, y
-	STA_TILE 7,8
+	STA_TILE 14,8
 	LDA number_low, y
 	STA Vera::Data0
 	STZ Vera::Data0
 
 	; progress bar
-		; 	LDA shieldbarpos, y          ; regA has sprite offset
-		; 	TAY                          ; regY has sprite offset
-		; 	LDX #$00
-		; @loop:                         ;
-		; 	LDA #$20
-		; 	STA PPUADDR                  ; write the high byte
-		; 	LDA shieldbaroffset, x
-		; 	STA PPUADDR                  ; write the low byte
-		; 	LDA progressbar, y           ; regA has sprite id
-		; 	STA PPUDATA
-		; 	INY 
-		; 	INX 
-		; 	CPX #$06
-		; 	BNE @loop
+			LDA shieldbarpos, y          ; regA has sprite offset
+			TAY                          ; regY has sprite offset
+			LDX #$00
+		@loop:                         ;
+			LDA #$01
+			STA Vera::AddrHigh
+			LDA shieldbaroffset, x
+			STA Vera::AddrLow
+			LDA progressbar, y           ; regA has sprite id
+			STA Vera::Data0
+			INY 
+			INX 
+			CPX #$06
+			BNE @loop
 
 	; durability
 	LDX dp_player
@@ -202,32 +202,32 @@ redrawShield_game:             ;
 redrawExperience_game:         ;
 	; remove flag
 	LDA redraws_game
-	EOR REQ_XP
+	EOR #REQ_XP
 	STA redraws_game
 	LDY xp_player
 
 	; digits
 	LDA number_high, y
-	STA_TILE 7,8
+	STA_TILE 21,8
 	LDA number_low, y
 	STA Vera::Data0
 	STZ Vera::Data0
 
 	; progress bar
-		; 	LDA experiencebarpos, y      ; regA has sprite offset
-		; 	TAY                          ; regY has sprite offset
-		; 	LDX #$00
-		; @loop:                         ;
-		; 	LDA #$20
-		; 	STA PPUADDR                  ; write the high byte
-		; 	LDA experiencebaroffset, x
-		; 	STA PPUADDR                  ; write the low byte
-		; 	LDA progressbar, y           ; regA has sprite id
-		; 	STA PPUDATA
-		; 	INY 
-		; 	INX 
-		; 	CPX #$06
-		; 	BNE @loop
+			LDA experiencebarpos, y      ; regA has sprite offset
+			TAY                          ; regY has sprite offset
+			LDX #$00
+		@loop:                         ;
+			LDA #$01
+			STA Vera::AddrHigh
+			LDA experiencebaroffset, x
+			STA Vera::AddrLow
+			LDA progressbar, y           ; regA has sprite id
+			STA Vera::Data0
+			INY 
+			INX 
+			CPX #$06
+			BNE @loop
 
 	JSR fix_renderer
 	jmp (default_irq_vector) 
@@ -235,7 +235,7 @@ redrawExperience_game:         ;
 redrawRun_game:                ;
 	; remove flag
 	LDA redraws_game
-	EOR REQ_RUN
+	EOR #REQ_RUN
 	STA redraws_game
 ; 	JSR stop_renderer
 ; 	LDA length_deck              ; don't display the run butto on first hand
@@ -314,85 +314,38 @@ redrawName_game:               ;
 
 ;; to merge into a single routine
 
-redrawCard1_game:              ;
+.macro DrawCard request, highbuf, lowbuf, tilebuf
 	; remove flag
 	LDA redraws_game
-	EOR REQ_CARD1
+	EOR #request
 	STA redraws_game
 	JSR stop_renderer
  	LDX #$00
 @loop:
-	LDA card1pos_high, x
+	LDA highbuf, x
 	STA Vera::AddrHigh
-	LDA card1pos_low, x
+	LDA lowbuf, x
 	STA Vera::AddrLow
-	LDA CARDBUF1, x
+	LDA tilebuf, x
 	STA Vera::Data0
 	INX
 	CPX #$36
 	BNE @loop
 	JSR start_renderer
 	jmp (default_irq_vector) 
+.endmacro
 
-redrawCard2_game:              ;
-	; remove flag
-	LDA redraws_game
-	EOR REQ_CARD2
-	STA redraws_game
-; 	JSR stop_renderer
-; 	LDX #$00
-; @loop:                         ;
-; 	LDA card1pos_high, x
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA card2pos_low, x
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA CARDBUF2, x
-; 	STA PPUDATA
-; 	INX 
-; 	CPX #$36
-; 	BNE @loop
-; 	JSR start_renderer
-	jmp (default_irq_vector) 
+redrawCard1_game:
+	DrawCard REQ_CARD1, card1pos_high, card1pos_low, CARDBUF1
 
-redrawCard3_game:              ;
-	; remove flag
-	LDA redraws_game
-	EOR REQ_CARD3
-	STA redraws_game
-	LDX #$00
-; 	JSR stop_renderer
-; @loop:                         ;
-; 	LDA card3pos_high, x
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA card3pos_low, x
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA CARDBUF3, x
-; 	STA PPUDATA
-; 	INX 
-; 	CPX #$36
-; 	BNE @loop
-; 	JSR start_renderer
-	jmp (default_irq_vector) 
+redrawCard2_game:
+	DrawCard REQ_CARD2, card2pos_high, card2pos_low, CARDBUF2
 
-redrawCard4_game:              ;
-	; remove flag
-	LDA redraws_game
-	EOR REQ_CARD4
-	STA redraws_game
-; 	JSR stop_renderer
-; 	LDX #$00
-; @loop:                         ;
-; 	LDA card3pos_high, x
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA card4pos_low, x
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA CARDBUF4, x
-; 	STA PPUDATA
-; 	INX 
-; 	CPX #$36
-; 	BNE @loop
-; 	JSR start_renderer
-	jmp (default_irq_vector) 
+redrawCard3_game:
+	DrawCard REQ_CARD3, card3pos_high, card3pos_low, CARDBUF3
+
+redrawCard4_game:
+	DrawCard REQ_CARD4, card4pos_high, card4pos_low, CARDBUF4
 
 animateTimer_game:             ; when timer reaches 0, set auto_room flag to 1
 	LDA timer_room

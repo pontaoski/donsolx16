@@ -10,7 +10,7 @@ initGfx:
 	sta Vera::CTRL ; $9F25
 
 	; zero out vram
-	ZERO_VRAM Map0VRAM, 2048
+	ZERO_VRAM Map0VRAM, 1790
 	ZERO_VRAM SpritesVRAM, 2048
 
 	RAM2VRAM Tiles, (TilesBaseVRAM-2), TILES_SIZE

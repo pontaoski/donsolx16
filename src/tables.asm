@@ -50,21 +50,21 @@ progressbar:                   ;
 	.byte $64,$65,$65,$65,$65,$66 ; $24
 
 healthbaroffset:               ;
-	.byte $c3,$c4,$c5,$c6,$c7,$c8,$c9
+	.byte $86,$88,$8A,$8C,$8E,$90,$92
 
 healthbarpos:                  ;
 	.byte $00,$06,$06,$06,$06,$0c,$0c,$0c,$0c,$12,$12
 	.byte $12,$12,$18,$18,$18,$18,$1E,$1E,$1E,$24,$24
 
 shieldbaroffset:               ;
-	.byte $ca,$cb,$cc,$cd,$ce,$cf,$d0
+	.byte $94,$96,$98,$9A,$9C,$9E,$A0
 
 shieldbarpos:                  ;
 	.byte $00,$06,$06,$0c,$0c,$12
 	.byte $12,$18,$18,$1E,$1E,$24
 
 experiencebaroffset:           ;
-	.byte $d1,$d2,$d3,$d4,$d5,$d6,$d7
+	.byte $A2,$A4,$A6,$A8,$AA,$AC,$AE
 
 experiencebarpos:              ;
 	.byte $00,$06,$06,$06,$06,$06,$06,$06,$06,$06,$06,$06,$06
@@ -96,71 +96,73 @@ card_glyphs:                   ;
 
 ;; Card Positions
 
-card1pos_high:                 ;
+card1pos_high:
+card2pos_high:
+card3pos_high:
+card4pos_high:
 	.byte $03,$03,$03,$03,$03,$03
 	.byte $03,$03,$03,$03,$03,$03
 	.byte $03,$03,$03,$03,$03,$03
+	.byte $03,$03,$03,$03,$03,$03
+
 	.byte $04,$04,$04,$04,$04,$04
 	.byte $04,$04,$04,$04,$04,$04
 	.byte $04,$04,$04,$04,$04,$04
-	.byte $05,$05,$05,$05,$05,$05
-	.byte $05,$05,$05,$05,$05,$05
+	.byte $04,$04,$04,$04,$04,$04
+
 	.byte $05,$05,$05,$05,$05,$05
 
-card1pos_low:                  ;
+card1pos_low:
 	.byte $06,$08,$0A,$0C,$0E,$10
 	.byte $46,$48,$4A,$4C,$4E,$50
 	.byte $86,$88,$8A,$8C,$8E,$90
+	.byte $C6,$C8,$CA,$CC,$CE,$D0
+
 	.byte $06,$08,$0A,$0C,$0E,$10
 	.byte $46,$48,$4A,$4C,$4E,$50
 	.byte $86,$88,$8A,$8C,$8E,$90
+	.byte $C6,$C8,$CA,$CC,$CE,$D0
+
 	.byte $06,$08,$0A,$0C,$0E,$10
-	.byte $46,$48,$4A,$4C,$4E,$50
-	.byte $86,$88,$8A,$8C,$8E,$90
 
-card2pos_low:                  ;
-	.byte $8a,$8b,$8c,$8d,$8e,$8f
-	.byte $aa,$ab,$ac,$ad,$ae,$af
-	.byte $ca,$cb,$cc,$cd,$ce,$cf
-	.byte $ea,$eb,$ec,$ed,$ee,$ef
-	.byte $0a,$0b,$0c,$0d,$0e,$0f
-	.byte $2a,$2b,$2c,$2d,$2e,$2f
-	.byte $4a,$4b,$4c,$4d,$4e,$4f
-	.byte $6a,$6b,$6c,$6d,$6e,$6f
-	.byte $8a,$8b,$8c,$8d,$8e,$8f
+card2pos_low:
+	.byte $14,$16,$18,$1A,$1C,$1E
+	.byte $54,$56,$58,$5A,$5C,$5E
+	.byte $94,$96,$98,$9A,$9C,$9E
+	.byte $D4,$D6,$D8,$DA,$DC,$DE
 
-card3pos_high:                 ;
-	.byte $21,$21,$21,$21,$21,$21
-	.byte $21,$21,$21,$21,$21,$21
-	.byte $21,$21,$21,$21,$21,$21
-	.byte $21,$21,$21,$21,$21,$21
-	.byte $22,$22,$22,$22,$22,$22
-	.byte $22,$22,$22,$22,$22,$22
-	.byte $22,$22,$22,$22,$22,$22
-	.byte $22,$22,$22,$22,$22,$22
-	.byte $22,$22,$22,$22,$22,$22
+	.byte $14,$16,$18,$1A,$1C,$1E
+	.byte $54,$56,$58,$5A,$5C,$5E
+	.byte $94,$96,$98,$9A,$9C,$9E
+	.byte $D4,$D6,$D8,$DA,$DC,$DE
 
-card3pos_low:                  ;
-	.byte $91,$92,$93,$94,$95,$96
-	.byte $b1,$b2,$b3,$b4,$b5,$b6
-	.byte $d1,$d2,$d3,$d4,$d5,$d6
-	.byte $f1,$f2,$f3,$f4,$f5,$f6
-	.byte $11,$12,$13,$14,$15,$16
-	.byte $31,$32,$33,$34,$35,$36
-	.byte $51,$52,$53,$54,$55,$56
-	.byte $71,$72,$73,$74,$75,$76
-	.byte $91,$92,$93,$94,$95,$96
+	.byte $14,$16,$18,$1A,$1C,$1E
 
-card4pos_low:                  ;
-	.byte $98,$99,$9a,$9b,$9c,$9d
-	.byte $b8,$b9,$ba,$bb,$bc,$bd
-	.byte $d8,$d9,$da,$db,$dc,$dd
-	.byte $f8,$f9,$fa,$fb,$fc,$fd
-	.byte $18,$19,$1a,$1b,$1c,$1d
-	.byte $38,$39,$3a,$3b,$3c,$3d
-	.byte $58,$59,$5a,$5b,$5c,$5d
-	.byte $78,$79,$7a,$7b,$7c,$7d
-	.byte $98,$99,$9a,$9b,$9c,$9d
+card3pos_low:
+	.byte $22,$24,$26,$28,$2A,$2C
+	.byte $62,$64,$66,$68,$6A,$6C
+	.byte $A2,$A4,$A6,$A8,$AA,$AC
+	.byte $E2,$E4,$E6,$E8,$EA,$EC
+
+	.byte $22,$24,$26,$28,$2A,$2C
+	.byte $62,$64,$66,$68,$6A,$6C
+	.byte $A2,$A4,$A6,$A8,$AA,$AC
+	.byte $E2,$E4,$E6,$E8,$EA,$EC
+
+	.byte $22,$24,$26,$28,$2A,$2C
+
+card4pos_low:
+	.byte $30,$32,$34,$36,$38,$3A
+	.byte $70,$72,$74,$76,$78,$7A
+	.byte $B0,$B2,$B4,$B6,$B8,$BA
+	.byte $F0,$F2,$F4,$F6,$F8,$FA
+
+	.byte $30,$32,$34,$36,$38,$3A
+	.byte $70,$72,$74,$76,$78,$7A
+	.byte $B0,$B2,$B4,$B6,$B8,$BA
+	.byte $F0,$F2,$F4,$F6,$F8,$FA
+
+	.byte $30,$32,$34,$36,$38,$3A
 
 ;; Dialog
 

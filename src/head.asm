@@ -167,14 +167,16 @@ REQ_CARD4           = %10000000
 
 ;; sprite buffers
 
-CARDBUF1            = $0300 
-CARDBUF2            = $0340 
-CARDBUF3            = $0380 
-CARDBUF4            = $03c0 
+.org $0400
+	CARDBUF1: .res $40
+	CARDBUF2: .res $40
+	CARDBUF3: .res $40
+	CARDBUF4: .res $40
+.reloc
 
 ;; variables
 
-	.org $0000
+	.org $0022
 hp_player               : .res 1 ; health points
 sp_player               : .res 1 ; shield points
 dp_player               : .res 1 ; durability points(max $16)
