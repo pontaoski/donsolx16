@@ -242,53 +242,51 @@ redrawExperience_game:         ;
 	JSR fix_renderer
 	jmp (default_irq_vector) 
 
-redrawRun_game:                ;
+redrawRun_game:
 	; remove flag
 	LDA redraws_game
 	EOR #REQ_RUN
 	STA redraws_game
-; 	JSR stop_renderer
-; 	LDA length_deck              ; don't display the run butto on first hand
-; 	CMP #$31                     ; deck is $36 - 4(first hand)
-; 	BEQ @hide
-; 	JSR loadRun_player           ; load canRun in regA
-; 	CMP #$01
-; 	BNE @hide
-; 	LDA length_deck              ; Can't run the last room
-; 	CMP #$00
-; 	BEQ @hide
-; @show:                         ; RUN: $1c,$1f,$18
-; 	BIT PPUSTATUS                ; read PPU status to reset the high/low latch
-; 	LDA #$21
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA #$18
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA #$6D                     ; Button(B)
-; 	STA PPUDATA
-; 	LDA #$00                     ; Blank
-; 	STA PPUDATA
-; 	LDA #$1C                     ; R
-; 	STA PPUDATA
-; 	LDA #$1F                     ; U
-; 	STA PPUDATA
-; 	LDA #$18                     ; N
-; 	STA PPUDATA
-; 	JSR start_renderer
-; 	jmp (default_irq_vector) 
-; @hide:                         ;
-; 	BIT PPUSTATUS                ; read PPU status to reset the high/low latch
-; 	LDA #$21
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA #$18
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA #$00                     ; R
-; 	STA PPUDATA
-; 	STA PPUDATA
-; 	STA PPUDATA
-; 	STA PPUDATA
-; 	STA PPUDATA
-	JSR start_renderer
-	jmp (default_irq_vector) 
+	LDA length_deck              ; don't display the run butto on first hand
+	CMP #$31                     ; deck is $36 - 4(first hand)
+	BEQ @hide
+ 	JSR loadRun_player           ; load canRun in regA
+ 	CMP #$01
+ 	BNE @hide
+ 	LDA length_deck              ; Can't run the last room
+ 	CMP #$00
+ 	BEQ @hide
+
+@show:
+	LDA #$6D		; button
+	STA_TILE 24,6
+	LDA #$00
+	STA Vera::Data0	; blank
+	STZ Vera::Data0
+	LDA #$1C
+	STA Vera::Data0	; R
+	STZ Vera::Data0
+	LDA #$1F
+	STA Vera::Data0	; U
+	STZ Vera::Data0
+	LDA #$18
+	STA Vera::Data0	; N
+	STZ Vera::Data0
+
+ 	jmp (default_irq_vector) 
+@hide:
+	LDA #$00		; button
+	STA_TILE 24,6
+	STZ Vera::Data0	; blank
+	STZ Vera::Data0
+	STZ Vera::Data0	; R
+	STZ Vera::Data0
+	STZ Vera::Data0	; U
+	STZ Vera::Data0
+	STZ Vera::Data0	; N
+	STZ Vera::Data0
+
+ 	jmp (default_irq_vector) 
 
 redrawName_game:               ;
 	; remove trigger

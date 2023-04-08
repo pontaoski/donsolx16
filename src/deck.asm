@@ -238,7 +238,7 @@ poke_seed2:
 
 seed1_between:
 	jsr poke_seed1
-@ensureX
+@ensureX:
 	; ensure x <= seed1_deck
 	cpx seed1_deck
 	beq @ensureY
