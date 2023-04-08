@@ -320,18 +320,18 @@ redrawCard1_game:              ;
 	EOR REQ_CARD1
 	STA redraws_game
 	JSR stop_renderer
-; 	LDX #$00
-; @loop:                         ;
-; 	LDA card1pos_high, x
-; 	STA PPUADDR                  ; write the high byte
-; 	LDA card1pos_low, x
-; 	STA PPUADDR                  ; write the low byte
-; 	LDA CARDBUF1, x
-; 	STA PPUDATA                  ; set tile.x pos
-; 	INX 
-; 	CPX #$36
-; 	BNE @loop
-; 	JSR start_renderer
+ 	LDX #$00
+@loop:
+	LDA card1pos_high, x
+	STA Vera::AddrHigh
+	LDA card1pos_low, x
+	STA Vera::AddrLow
+	LDA CARDBUF1, x
+	STA Vera::Data0
+	INX
+	CPX #$36
+	BNE @loop
+	JSR start_renderer
 	jmp (default_irq_vector) 
 
 redrawCard2_game:              ;

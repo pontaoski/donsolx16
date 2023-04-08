@@ -31,6 +31,7 @@ __INIT:                        ;
 
 __MAIN:                        ;
 	.INCLUDE "main.asm"
+	WAI
 	JMP __MAIN
 
 ;; NMI

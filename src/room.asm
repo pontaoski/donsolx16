@@ -19,7 +19,7 @@ enter_room:                    ;
 	TYA 
 	STA card4_room
 	; etcs
-	; JSR updateBuffers_room
+	JSR updateBuffers_room
 	JSR updateExperience_player  ; update experience
 	; need redraws
 	LDA #$01
@@ -149,12 +149,11 @@ loadCardsLeft_room:            ; () -> x:count
 	; If $B4 contains $EE AND $B5 contains $12 then the value at memory
 	; location $12EE + Y (6) = $12F4 is fetched AND put in the accumulator.
 
-updateBuffers_room:            ; TODO maybe turn into a loop..
+updateBuffers_room:
 	; card 1 buffer
-	LDA #$00
-	STA id_temp
+	STZ id_temp
 	LDX #$00
-	LDY card1_room, x
+	LDY card1_room
 	LDA cards_offset_low, y      ; find card offset
 	STA lb_temp
 	LDA cards_offset_high, y
@@ -167,6 +166,8 @@ updateBuffers_room:            ; TODO maybe turn into a loop..
 	LDA id_temp
 	CMP #$36
 	BNE @loop1
+	RTS
+
 	; card 2 buffer
 	LDA #$00
 	STA id_temp

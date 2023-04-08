@@ -1,4 +1,5 @@
 cart.o
 cart.prg
+cart.sym
 rom.bin
 x16emu
