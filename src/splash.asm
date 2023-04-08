@@ -100,11 +100,13 @@ loadAttributes_splash:         ;
 ; 	BNE @loop
 	RTS 
 
-addScore_splash:               ;
-	lda number_high, x
-	STA_TILE 16,7
-	lda number_low, x
+addScore_splash:
+	ldy highscore_splash
+	lda number_high, y
 	STA_TILE 15,7
+	lda number_low, y
+	sta Vera::Data0
+	stz Vera::Data0
 	RTS 
 
 addNecomedre_splash:           ; $6a,$6b,$6e
