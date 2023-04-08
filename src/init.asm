@@ -25,8 +25,20 @@ initGfx:
 
 	; set up display scaling
 	lda #64 ; 128/64 = 2x scaling
-	sta Vera::DC::HScale
-	sta Vera::DC::VScale
+	sta Vera::DC0::HScale
+	sta Vera::DC0::VScale
+
+	; dcsel = 1
+	lda #(1 << 1)
+	sta Vera::CTRL
+
+	; mask out the right edge of the screen
+	lda #($8A)
+	sta Vera::DC1::HStop
+
+	; dcsel = 0
+	lda #(0 << 1)
+	sta Vera::CTRL
 
 	; configure splash cursor sprite
 		TARGET_SPRITE_AUTOINCR SplashCursorSprite
@@ -82,11 +94,11 @@ initGfx:
 
 	; set background to black
 	lda #0
-	sta Vera::DC::Border ; $9F2C
+	sta Vera::DC0::Border ; $9F2C
 
 	; enable display
 	lda #(VideoConfig::Sprites | VideoConfig::Layer0 | VideoConfig::OutputVGA)
-	sta Vera::DC::Video
+	sta Vera::DC0::Video
 
 	; hook into vera irq
 		sei

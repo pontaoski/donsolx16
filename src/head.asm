@@ -25,11 +25,14 @@
 	IEN            = $9F26
 	ISR            = $9F27
 
-	.scope DC
+	.scope DC0
 		Video       = $9F29
 		HScale      = $9F2A
 		VScale      = $9F2B
 		Border      = $9F2C
+	.endscope
+
+	.scope DC1
 		HStart      = $9F29
 		HStop       = $9F2A
 		VStart      = $9F2B
