@@ -1,3 +1,8 @@
+; SPDX-FileCopyrightText: 2017 Hundredrabbits
+; SPDX-FileCopyrightText: 2023 Janet Blackquill <uhhadd@gmail.com>
+;
+; SPDX-License-Identifier: MIT
+
 TilesBaseVRAM = $00800
 PaletteBaseVRAM = $1FA00
 IRQVector = $0314

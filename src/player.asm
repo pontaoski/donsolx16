@@ -1,3 +1,6 @@
+; SPDX-FileCopyrightText: 2017 Hundredrabbits
+;
+; SPDX-License-Identifier: MIT
 
 ;; player
 

@@ -1,3 +1,7 @@
+; SPDX-FileCopyrightText: 2023 Janet Blackquill <uhhadd@gmail.com>
+;
+; SPDX-License-Identifier: MIT
+
 Map0VRAM = $00000
 
 .macro FOREVER
