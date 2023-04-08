@@ -33,6 +33,9 @@ initGfx:
 	sta Vera::CTRL
 
 	; mask out the right edge of the screen
+	lda #($D)
+	sta Vera::DC1::HStart
+
 	lda #($8A)
 	sta Vera::DC1::HStop
 
