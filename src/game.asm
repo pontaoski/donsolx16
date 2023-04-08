@@ -10,8 +10,8 @@ show_game:                     ;
 	RTS 
 
 restart_game:                  ;
-	; JSR init_deck                ; deck
-	JSR shuffle_deck
+	JSR init_deck                ; deck
+	; JSR shuffle_deck
 	JSR reset_player             ; player
 	JSR enter_room
 	LDA #$0D
@@ -286,6 +286,7 @@ redrawName_game:               ;
 	STA reqdraw_name
 
 	PREPARE_TILE 3, 10
+	LDX #0
 @loop:                         ;
 	LDY #$01                     ; load card id
 	; load card name

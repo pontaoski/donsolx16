@@ -19,7 +19,7 @@ enter_room:                    ;
 	TYA 
 	STA card4_room
 	; etcs
-	JSR updateBuffers_room
+	; JSR updateBuffers_room
 	JSR updateExperience_player  ; update experience
 	; need redraws
 	LDA #$01
@@ -27,7 +27,7 @@ enter_room:                    ;
 	; new draws
 	LDA #%11111111
 	STA redraws_game
-	JSR Enter_sound
+	; JSR Enter_sound
 	RTS 
 
 ;; flip card from the table, used in controls when press

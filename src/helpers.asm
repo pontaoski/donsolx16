@@ -53,6 +53,7 @@ redraw_dialog:                 ;
 	STA reqdraw_dialog
 
 	PREPARE_TILE 3,24
+	LDX #0
 @loop:                         ;
 	LDY id_dialog
 	LDA dialogs_offset_low,y

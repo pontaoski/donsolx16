@@ -226,10 +226,6 @@ previous_input          : .res 1
 ptr_src                 : .res 1 
 	.reloc
 
-	.org $80
-	CardDeck
-	.reloc
-
-	.org $80
-	ShufDeck
+	.org $A9
+	CardDeck:
 	.reloc
