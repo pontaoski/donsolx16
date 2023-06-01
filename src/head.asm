@@ -133,6 +133,9 @@
 
 joystick_scan = $FF53
 joystick_get = $FF56
+mouse_get = $FF6B
+mouse_scan = $FF71
+mouse_config = $FF68
 
 ; PPUCTRL             = $2000 
 ; PPUMASK             = $2001 
@@ -218,6 +221,11 @@ id_temp                 : .res 1
 swap_temp				: .res 1
 damages_player          : .res 1 ; TODO: check if necessary?
 enabled_sound           : .res 1 
+
+past_mouse_btn			: .res 1
+mouse_btn				: .res 1
+mouse_x					: .res 2
+mouse_y					: .res 2
 
 ;; TODO | cleanup
 

@@ -8,7 +8,8 @@ PaletteBaseVRAM = $1FA00
 IRQVector = $0314
 
 SpritesVRAM = $1FC00
-SplashCursorSprite = SpritesVRAM
+MouseSprite = SpritesVRAM
+SplashCursorSprite = MouseSprite + 8
 GameCursorSprite = SplashCursorSprite + 8
 
 initGfx:
@@ -95,6 +96,12 @@ initGfx:
 
 		cli
 
+initMouse:
+	LDA #$FF
+	LDX #32
+	LDY #30
+	JSR mouse_config
+
 initLogic:
 	JSR show_splash
 	JSR start_renderer
@@ -108,7 +115,6 @@ initDone:
 initSplashSprites:
 ; configure splash cursor sprite
 	TARGET_SPRITE_AUTOINCR SplashCursorSprite
-
 	lda #( ($02A40 >> 5) & $FF )
 	sta Vera::Data0 ; set address of gfx
 	lda #( ($02A40 >> 13) & $F )
@@ -133,6 +139,21 @@ initSplashSprites:
 	stz Vera::Data0 ; zero out Y
 	stz Vera::Data0
 	lda #(SpriteConfig::ZDepth0)
+	sta Vera::Data0
+	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	sta Vera::Data0
+
+; configure mouse sprite
+	TARGET_SPRITE_AUTOINCR MouseSprite
+	lda #( ($02840 >> 5) & $FF )
+	sta Vera::Data0 ; set address of gfx
+	lda #( ($02840 >> 13) & $F )
+	sta Vera::Data0
+	stz Vera::Data0 ; zero out X
+	stz Vera::Data0
+	stz Vera::Data0 ; zero out Y
+	stz Vera::Data0
+	lda #(SpriteConfig::ZDepth2)
 	sta Vera::Data0
 	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
 	sta Vera::Data0
