@@ -11,6 +11,7 @@ show_splash:                   ;
 	LDA #$01
 	STA reqdraw_splash
 	STA reqdraw_cursor
+	JSR initSplashSprites
 	RTS 
 
 ;; controls

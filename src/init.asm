@@ -43,36 +43,7 @@ initGfx:
 	lda #(0 << 1)
 	sta Vera::CTRL
 
-	; configure splash cursor sprite
-		TARGET_SPRITE_AUTOINCR SplashCursorSprite
-
-		lda #( ($02A40 >> 5) & $FF )
-		sta Vera::Data0 ; set address of gfx
-		lda #( ($02A40 >> 13) & $F )
-		sta Vera::Data0
-		stz Vera::Data0 ; zero out X
-		stz Vera::Data0
-		stz Vera::Data0 ; zero out Y
-		stz Vera::Data0
-		lda #(SpriteConfig::ZDepth2)
-		sta Vera::Data0
-		lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
-		sta Vera::Data0
-
-	; configure game cursor sprite
-		TARGET_SPRITE_AUTOINCR GameCursorSprite
-		lda #( ($02A60 >> 5) & $FF )
-		sta Vera::Data0 ; set address of gfx
-		lda #( ($02A60 >> 13) & $F )
-		sta Vera::Data0
-		stz Vera::Data0 ; zero out X
-		stz Vera::Data0
-		stz Vera::Data0 ; zero out Y
-		stz Vera::Data0
-		lda #(SpriteConfig::ZDepth0)
-		sta Vera::Data0
-		lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
-		sta Vera::Data0
+	JSR initSplashSprites
 
 	; configure layer 0
 		; general config
@@ -130,4 +101,41 @@ initLogic:
 
 initAudio:
 	; JSR Enable_sound
+
+initDone:
+	JMP __MAIN
+
+initSplashSprites:
+; configure splash cursor sprite
+	TARGET_SPRITE_AUTOINCR SplashCursorSprite
+
+	lda #( ($02A40 >> 5) & $FF )
+	sta Vera::Data0 ; set address of gfx
+	lda #( ($02A40 >> 13) & $F )
+	sta Vera::Data0
+	stz Vera::Data0 ; zero out X
+	stz Vera::Data0
+	stz Vera::Data0 ; zero out Y
+	stz Vera::Data0
+	lda #(SpriteConfig::ZDepth2)
+	sta Vera::Data0
+	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	sta Vera::Data0
+
+; configure game cursor sprite
+	TARGET_SPRITE_AUTOINCR GameCursorSprite
+	lda #( ($02A60 >> 5) & $FF )
+	sta Vera::Data0 ; set address of gfx
+	lda #( ($02A60 >> 13) & $F )
+	sta Vera::Data0
+	stz Vera::Data0 ; zero out X
+	stz Vera::Data0
+	stz Vera::Data0 ; zero out Y
+	stz Vera::Data0
+	lda #(SpriteConfig::ZDepth0)
+	sta Vera::Data0
+	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	sta Vera::Data0
+
+	rts
 
