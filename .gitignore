@@ -4,6 +4,7 @@
 
 cart.o
 cart.prg
+DONSOL.PRG
 cart.sym
 rom.bin
 x16emu
