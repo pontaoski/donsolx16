@@ -102,7 +102,84 @@ loadInterface_game:
 	RTS 
 
 loadAttributes_game:
-	; TODO: initialize palettes
+	; init HP number palette
+	PREPARE_TILE 7,8
+	LDA Vera::Data0
+	LDA #(1 << 4)
+	STA Vera::Data0
+
+	LDA Vera::Data0
+	LDA #(1 << 4)
+	STA Vera::Data0
+
+	; init HP bar palette
+	LDX #0
+	LDY #(1 << 4)
+@hpLoop:
+	LDA #$01
+	STA Vera::AddrHigh
+	LDA healthbaroffset, x
+	STA Vera::AddrLow
+	LDA Vera::Data0
+	STY Vera::Data0
+	INX
+	CPX #$06
+	BNE @hpLoop
+
+	; init SP number palette
+	PREPARE_TILE 14,8
+	LDA Vera::Data0
+	LDA #(2 << 4)
+	STA Vera::Data0
+
+	LDA Vera::Data0
+	LDA #(2 << 4)
+	STA Vera::Data0
+
+	PREPARE_TILE 12,8
+	; init durability palette
+	LDA Vera::Data0
+	LDA #(4 << 4)
+	STA Vera::Data0
+
+	; init SP bar palette
+	LDX #0
+	LDY #(2 << 4)
+@spLoop:
+	LDA #$01
+	STA Vera::AddrHigh
+	LDA shieldbaroffset, x
+	STA Vera::AddrLow
+	LDA Vera::Data0
+	STY Vera::Data0
+	INX
+	CPX #$06
+	BNE @spLoop
+
+	; init XP number palette
+	PREPARE_TILE 21,8
+	LDA Vera::Data0
+	LDA #(3 << 4)
+	STA Vera::Data0
+
+	LDA Vera::Data0
+	LDA #(3 << 4)
+	STA Vera::Data0
+
+	; init XP bar palette
+	LDX #0
+	LDY #(3 << 4)
+@xpLoop:
+	LDA #$01
+	STA Vera::AddrHigh
+	LDA experiencebaroffset, x
+	STA Vera::AddrLow
+	LDA Vera::Data0
+	STY Vera::Data0
+	INX
+	CPX #$06
+	BNE @xpLoop
+
 	RTS 
 
 redrawCursor_game:
@@ -139,7 +216,7 @@ redrawHealth_game:             ;
 	STA_TILE 7,8
 	LDA number_low, y
 	STA Vera::Data0
-	STZ Vera::Data0
+	LDA Vera::Data0
 
 	; progress bar
 			LDA healthbarpos, y          ; regA has sprite offset
@@ -185,7 +262,7 @@ redrawShield_game:             ;
 	STA_TILE 14,8
 	LDA number_low, y
 	STA Vera::Data0
-	STZ Vera::Data0
+	LDA Vera::Data0
 
 	; progress bar
 			LDA shieldbarpos, y          ; regA has sprite offset
@@ -225,7 +302,7 @@ redrawExperience_game:         ;
 	STA_TILE 21,8
 	LDA number_low, y
 	STA Vera::Data0
-	STZ Vera::Data0
+	LDA Vera::Data0
 
 	; progress bar
 			LDA experiencebarpos, y      ; regA has sprite offset

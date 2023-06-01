@@ -34,7 +34,7 @@ Map0VRAM = $00000
 .macro STA_TILE tx, ty
    PREPARE_TILE tx, ty
    sta Vera::Data0
-   stz Vera::Data0
+   lda Vera::Data0
 .endmacro
 
 .macro ZERO_VRAM vram_addr, num_bytes
