@@ -13,10 +13,6 @@ SplashCursorSprite = MouseSprite + 8
 GameCursorSprite = SplashCursorSprite + 8
 
 initGfx:
-	; reset vera
-	lda #$80
-	sta Vera::CTRL ; $9F25
-
 	; zero out vram
 	ZERO_VRAM Map0VRAM, 1790
 	ZERO_VRAM SpritesVRAM, 2048
@@ -72,7 +68,9 @@ initGfx:
 	sta Vera::DC0::Border ; $9F2C
 
 	; enable display
-	lda #(VideoConfig::Sprites | VideoConfig::Layer0 | VideoConfig::OutputVGA)
+	lda Vera::DC0::Video
+	and #%1111
+	ora #(VideoConfig::Sprites | VideoConfig::Layer0)
 	sta Vera::DC0::Video
 
 	; hook into vera irq
