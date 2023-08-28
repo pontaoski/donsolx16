@@ -5,6 +5,16 @@
 
 ;; Main
 
+.macro Compare16bit num1, num2
+	.local @ope
+	lda num1+1
+	cmp #>num2
+	bne @ope
+	lda num1
+	cmp #<num2
+@ope:
+.endmacro
+
 handleTimer:                   ; when auto_room is 1, do post flip actions
 	LDA auto_room
 	CMP #$01
@@ -172,15 +182,13 @@ handleMouse:
 	JMP handleMouseGame
 
 handleMouseSplash:
-	LDA mouse_y
-	CMP #(25 * 8)
+	Compare16bit mouse_y, (25 * 16)
 	BCC @done
-	CMP #(26 * 8)
+	Compare16bit mouse_y, (26 * 16)
 	BCS @done
 
 @leftButton:
-	LDA mouse_x
-	CMP #(12 * 8)
+	Compare16bit mouse_x, (12 * 16)
 	BCS @middleButton
 
     LDA #$00
@@ -195,8 +203,7 @@ handleMouseSplash:
     JMP mouseStartGame
 
 @middleButton:
-	LDA mouse_x
-	CMP #(20 * 8)
+	Compare16bit mouse_x, (20 * 16)
 	BCS @rightButton
 
     LDA #$01
@@ -232,18 +239,16 @@ mouseStartGame:
 	JMP __MAIN
 
 handleMouseGame:
-	LDA mouse_y
 
 @topRow:
-	CMP #(6 * 8)
+	Compare16bit mouse_y, (6 * 16)
 	BCC @midRow
-	CMP #(7 * 8)
+	Compare16bit mouse_y, (7 * 16)
 	BCS @midRow
 
-	LDA mouse_x
-	CMP #(24 * 8)
+	Compare16bit mouse_x, (24 * 16)
 	BCC @topRowDone
-	CMP #(29 * 8)
+	Compare16bit mouse_x, (29 * 16)
 	BCS @topRowDone
 
     LDA mouse_btn
@@ -257,50 +262,49 @@ handleMouseGame:
 	JMP backToJoy
 
 @midRow:
-	CMP #(12 * 8)
-	BCC @midRowDone
-	CMP #(21 * 8)
+	Compare16bit mouse_y, (12 * 16)
+	BCC @midRowDoneBranchAid
+	Compare16bit mouse_y, (21 * 16)
 	BCS @midRowDone
 
 @midRowOne:
-	LDA mouse_x
-	CMP #(3 * 8)
+	Compare16bit mouse_x, (3 * 16)
 	BCC @midRowDone
 
-	CMP #(9 * 8)
+	Compare16bit mouse_x, (9 * 16)
 	BCS @midRowTwo
 
 	LDA #0
 	JMP midRowHover
 
 @midRowTwo:
-	LDA mouse_x
-	CMP #(10 * 8)
+	Compare16bit mouse_x, (10 * 16)
 	BCC @midRowDone
 
-	CMP #(16 * 8)
+	Compare16bit mouse_x, (16 * 16)
 	BCS @midRowThree
 
 	LDA #1
 	JMP midRowHover
 
+@midRowDoneBranchAid:
+	BRA @midRowDone
+
 @midRowThree:
-	LDA mouse_x
-	CMP #(17 * 8)
+	Compare16bit mouse_x, (17 * 16)
 	BCC @midRowDone
 
-	CMP #(23 * 8)
+	Compare16bit mouse_x, (23 * 16)
 	BCS @midRowFour
 
 	LDA #2
 	JMP midRowHover
 
 @midRowFour:
-	LDA mouse_x
-	CMP #(24 * 8)
+	Compare16bit mouse_x, (24 * 16)
 	BCC @midRowDone
 
-	CMP #(30 * 8)
+	Compare16bit mouse_x, (30 * 16)
 	BCS @midRowDone
 
 	LDA #3

@@ -12,16 +12,31 @@ MouseSprite = SpritesVRAM
 SplashCursorSprite = MouseSprite + 8
 GameCursorSprite = SplashCursorSprite + 8
 
+jmp initGfx
+
+	tilesFileName: .asciiz "tiles.bin"
+	tilesFileNameLen = .strlen("tiles.bin")
+
 initGfx:
 	; zero out vram
 	ZERO_VRAM Map0VRAM, 1790
 	ZERO_VRAM SpritesVRAM, 2048
 
-	RAM2VRAM Tiles, (TilesBaseVRAM-2), TILES_SIZE
+	lda #tilesFileNameLen
+	ldx #<tilesFileName
+	ldy #>tilesFileName
+	jsr cx16_set_name
+
+	lda #2
+	ldx #<TilesBaseVRAM
+	ldy #>TilesBaseVRAM
+	jsr cx16_load
+
+	; RAM2VRAM Tiles, (TilesBaseVRAM-2), TILES_SIZE
 	RAM2VRAM Palette, (PaletteBaseVRAM-2), PALETTE_SIZE
 
 	; set up display scaling
-	lda #64 ; 128/64 = 2x scaling
+	lda #128 ; 128/128 = 1x scaling
 	sta Vera::DC0::HScale
 	sta Vera::DC0::VScale
 
@@ -53,7 +68,7 @@ initGfx:
 		sta Vera::L0::MapBase
 
 		; configure tiles
-		lda #(TilesBaseVRAM>>9 | TileConfig::W8 | TileConfig::H8)
+		lda #(TilesBaseVRAM>>9 | TileConfig::W16 | TileConfig::H16)
 		sta Vera::L0::TileBase
 
 		; reset scrolling
@@ -96,8 +111,8 @@ initGfx:
 
 initMouse:
 	LDA #$FF
-	LDX #32
-	LDY #30
+	LDX #(640 / 8)
+	LDY #(480 / 8)
 	JSR mouse_config
 
 initLogic:
@@ -113,9 +128,9 @@ initDone:
 initSplashSprites:
 ; configure splash cursor sprite
 	TARGET_SPRITE_AUTOINCR SplashCursorSprite
-	lda #( ($02A40 >> 5) & $FF )
+	lda #( ($09100 >> 5) & $FF )
 	sta Vera::Data0 ; set address of gfx
-	lda #( ($02A40 >> 13) & $F )
+	lda #( ($09100 >> 13) & $F )
 	sta Vera::Data0
 	stz Vera::Data0 ; zero out X
 	stz Vera::Data0
@@ -123,14 +138,14 @@ initSplashSprites:
 	stz Vera::Data0
 	lda #(SpriteConfig::ZDepth2)
 	sta Vera::Data0
-	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	lda #(SpriteConfig::Width16 | SpriteConfig::Height16)
 	sta Vera::Data0
 
 ; configure game cursor sprite
 	TARGET_SPRITE_AUTOINCR GameCursorSprite
-	lda #( ($02A60 >> 5) & $FF )
+	lda #( ($09180 >> 5) & $FF )
 	sta Vera::Data0 ; set address of gfx
-	lda #( ($02A60 >> 13) & $F )
+	lda #( ($09180 >> 13) & $F )
 	sta Vera::Data0
 	stz Vera::Data0 ; zero out X
 	stz Vera::Data0
@@ -138,14 +153,14 @@ initSplashSprites:
 	stz Vera::Data0
 	lda #(SpriteConfig::ZDepth0)
 	sta Vera::Data0
-	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	lda #(SpriteConfig::Width16 | SpriteConfig::Height16)
 	sta Vera::Data0
 
 ; configure mouse sprite
 	TARGET_SPRITE_AUTOINCR MouseSprite
-	lda #( ($02840 >> 5) & $FF )
+	lda #( ($08900 >> 5) & $FF )
 	sta Vera::Data0 ; set address of gfx
-	lda #( ($02840 >> 13) & $F )
+	lda #( ($08900 >> 13) & $F )
 	sta Vera::Data0
 	stz Vera::Data0 ; zero out X
 	stz Vera::Data0
@@ -153,7 +168,7 @@ initSplashSprites:
 	stz Vera::Data0
 	lda #(SpriteConfig::ZDepth2)
 	sta Vera::Data0
-	lda #(SpriteConfig::Width8 | SpriteConfig::Height8)
+	lda #(SpriteConfig::Width16 | SpriteConfig::Height16)
 	sta Vera::Data0
 
 	rts

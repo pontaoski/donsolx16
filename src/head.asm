@@ -136,6 +136,8 @@ joystick_get = $FF56
 mouse_get = $FF6B
 mouse_scan = $FF71
 mouse_config = $FF68
+cx16_set_name = $FFBD
+cx16_load = $FFD5
 
 ; PPUCTRL             = $2000 
 ; PPUMASK             = $2001 

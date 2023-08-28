@@ -17,10 +17,10 @@
 
 ;; include sprites
 
-Tiles:
-	.incbin "../data/tiles.bin"
-Tiles_end:
-	TILES_SIZE = Tiles_end - Tiles
+; Tiles:
+; 	.incbin "../data/tiles.bin"
+; Tiles_end:
+; 	TILES_SIZE = Tiles_end - Tiles
 
 Palette:
 	.incbin "../data/tiles.bin.PAL"

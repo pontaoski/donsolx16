@@ -52,14 +52,16 @@ redrawCursor_splash:           ;
 	; set x pos
 	TARGET_SPRITE_AUTOINCR (SplashCursorSprite+2)
 	LDX cursor_splash
-	LDA selections_splash, x
+	LDA selections_splash_lo, x
+	LDY selections_splash_hi, x
 	STA Vera::Data0
-	STZ Vera::Data0
+	STY Vera::Data0
 
 	; set y pos
-	LDA #$C8
+	LDA #<$190
 	STA Vera::Data0
-	STZ Vera::Data0
+	LDA #>$190
+	STA Vera::Data0
 @done:                         ;
 	jmp (default_irq_vector) 
 

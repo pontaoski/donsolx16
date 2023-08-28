@@ -190,14 +190,16 @@ redrawCursor_game:
 	; set x pos
 	TARGET_SPRITE_AUTOINCR (GameCursorSprite+2)
 	LDX cursor_game
-	LDA selections_game, x
+	LDA selections_game_lo, x
+	LDY selections_game_hi, x
 	STA Vera::Data0
-	STZ Vera::Data0
+	STY Vera::Data0
 
 	; set y pos
-	LDA #$B0
+	LDA #<$160
 	STA Vera::Data0
-	STZ Vera::Data0
+	LDA #>$160
+	STA Vera::Data0
 
 @done:
 	jmp (default_irq_vector) 

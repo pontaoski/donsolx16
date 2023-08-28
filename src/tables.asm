@@ -21,8 +21,11 @@ attributes_game:               ;
 
 ;; Cursor
 
-selections_game:               ;
-	.byte $2c,$64,$9c,$d4
+selections_game_lo:
+	.byte <($2c*2),<($64*2),<($9c*2),<($d4*2)
+
+selections_game_hi:
+	.byte >($2c*2),>($64*2),>($9c*2),>($d4*2)
 
 ;; Number Positions
 
@@ -359,8 +362,11 @@ card_names_offset_hb:          ;
 
 ;; splash
 
-selections_splash:             ;
-	.byte $2c,$5c,$9c
+selections_splash_lo:
+	.byte <(6 * 16),<(12 * 16),<(20 * 16)
+
+selections_splash_hi:
+	.byte >(6 * 16),>(12 * 16),>(20 * 16)
 
 SplashMap:                   ; [skip]
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$98,$98,$98,$98,$98,$98,$98,$98,$98,$98,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
